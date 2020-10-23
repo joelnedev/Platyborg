@@ -1,0 +1,37 @@
+{
+  "name": "vagan_bot",
+  "version": "1.0.0",
+  "description": "A muultifunctional Discord bot created for Killer Bean Club.",
+  "main": "BingBot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuhJuhButts/Vagan.git"
+  },
+  "keywords": [
+    "Vagan",
+    "Killer",
+    "Bean",
+    "Discord",
+    "Bot",
+    "Discord",
+    "Bot",
+    "Bean"
+  ],
+  "author": "JuhJuhButt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JuhJuhButts/Vagan/issues"
+  },
+  "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "pm2": "^4.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0"
+  }
+}
