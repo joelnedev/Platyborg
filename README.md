@@ -1,2 +1,2 @@
-# BingBot
-A bot designed specifically for Killer Bean Club (https://discord.gg/BgGhHUQ)
+# Vagan
+A bot designed for Killer Bean Club (https://discord.gg/BgGhHUQ)

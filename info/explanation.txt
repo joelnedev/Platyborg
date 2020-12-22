@@ -1,0 +1,4 @@
+JSON doesnt like comments so imma put it in a text file (its fairly simple anyway)
+
+basically JSON files store static information. its confusing and stupid to write to JSONs using fs.write so i just leave it as stuff i edit manually. 
+you can see what i store in the files, its very simple to read. i pretty much just store arrays of random messages and things like token and prefix.

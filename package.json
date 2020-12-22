@@ -1,17 +1,17 @@
 {
-  "name": "vagan_bot",
-  "version": "1.0.0",
+  "name": "chintow",
+  "version": "2.0.0",
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
-  "main": "BingBot.js",
+  "main": "Chintow.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JuhJuhButts/Vagan.git"
+    "url": "git+https://github.com/JuhJuhButts/Chintow-2.git"
   },
   "keywords": [
-    "Vagan",
+    "Chintow",
     "Killer",
     "Bean",
     "Discord",
@@ -23,12 +23,11 @@
   "author": "JuhJuhButt",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JuhJuhButts/Vagan/issues"
+    "url": "https://github.com/JuhJuhButts/Chintow-2/issues"
   },
-  "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
+  "homepage": "https://github.com/JuhJuhButts/Chintow-2#readme",
   "dependencies": {
     "discord.js": "^12.3.1",
-    "dotenv": "^8.2.0",
     "pm2": "^4.5.0"
   },
   "devDependencies": {
