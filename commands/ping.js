@@ -1,5 +1,5 @@
 module.exports = { // eslint-disable-line no-undef
-	name: "Ping",
+	name: "ping",
 	description: "Ping!",
 	aliases: [],
 	args: false,

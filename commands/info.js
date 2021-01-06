@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 module.exports = { // eslint-disable-line no-undef
-	name: "Info",
+	name: "info",
 	description: "Provides helpful information about the server, a channel, or a staff/active member. For more technical details, use RoboTop.",
 	aliases: [],
 	args: true,
@@ -40,7 +40,13 @@ module.exports = { // eslint-disable-line no-undef
 		case "shadowBeans":
 		case "shadowBean":
 		case "sb":
-			message.channel.send("");
+			message.channel.send(`To become a shadow bean you must:
+	- be at least level 10 on RoboTop xp system
+	- be trusted by all admins
+	- have at least 3 existing shadow beans nominate you for it`);
+			break;
+		case "server":
+		//	message.channel.send("Killer Bean Club is a cool pl")
 			break;
 		}
 	},

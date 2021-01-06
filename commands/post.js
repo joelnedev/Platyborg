@@ -1,5 +1,5 @@
 module.exports = { // eslint-disable-line no-undef
-	name: "Post",
+	name: "post",
 	description: "Show off your epic talent in #showcase",
 	aliases: ["show", "showcase", "art"],
 	usage: " [<caption>]",
@@ -14,7 +14,7 @@ module.exports = { // eslint-disable-line no-undef
 			.setColor("#00ff00")
 			.setTitle(`Showcase by ${message.member.nickname}`)
 			// eslint-disable-next-line no-undef
-			.setFooter("If you want to post your own showcase, go to #showcase-discussion and type `/post`")
+			.setFooter("If you want to post your own showcase, go to # and type `/post`")
 			.setTimestamp();
 		
 		// Assign properties if they exist

@@ -4,9 +4,8 @@ module.exports = { // eslint-disable-line no-undef
 	description: "Tells you what things there are and what the thing does.",
 	aliases: ["h"],
 	usage: " [<command>]",
-	execute(message, args, Discord, errorFunction) {
-		// Allows me to call the errorReplies or commands arrays later in the script.
-		const { errorReplies } = require("../info/randomMessges.json"); // eslint-disable-line no-undef
+	execute(message, args, Discord, errorReplies) {
+		// Allows me to call the commands array later in the script.
 		const { commands } = message.client;
 
 		// If the user doesn't include arguments, send the regular help message and exit.
@@ -18,7 +17,15 @@ module.exports = { // eslint-disable-line no-undef
 				.addField("Commands", commands.map(command => command.name).join("\n "), true);
 			message.channel.send(embed1)
 				.catch(error => {
-					errorFunction(message, error);
+					const embed = new Discord.MessageEmbed()
+						.setTitle("Error 🚨")
+						.setColor("#ff0000")
+						.setAuthor(message.member.nickname, message.author.avatarURL())
+						.addField("Error", "An error has occurred.");
+					message.channel.send(embed
+						.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+						.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
+					message.client.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
 				}); return;
 		}
 
