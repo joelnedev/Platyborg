@@ -10,9 +10,9 @@ Any help with developing the bot is greatly appreciated. You don't have to learn
 
 As noted above, you can contribute to the bot by
 
--Commenting on issues/pull requests
--Creating issues or starting discussions
--Emailing me
+- Commenting on issues/pull requests
+- Creating issues or starting discussions
+- Emailing me
 
 ### Programming
 
