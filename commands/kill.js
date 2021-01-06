@@ -1,12 +1,12 @@
 module.exports = { // eslint-disable-line no-undef
-	name: 'Kill',
-	description: 'Kills Chintow :troll4k:',
+	name: "Kill",
+	description: "Kills Vagan 😁",
 	args: false,
-	execute(message, args, Discord) {
-        // If a "God Mode" user (Spoons, Stoneworm, JuhJuhButt) executes "kill", kill the process. Otherwise, politely explain that they lack the permissions to do so. 
-		const {godModeUsers} = require("../info/config.json");
+	// eslint-disable-next-line no-unused-vars
+	execute(message, args, Discord, godModeUsers) {
+		// If a "God Mode" user executes "kill", kill the process. Otherwise, politely inform them that they lack the permissions to do so.
 		if (godModeUsers.some(ID => message.author.id === ID)) {
-			message.channel.send("rebooting :grin::+1:").then(() => { process.exit() }); // eslint-disable-line no-undef
+			message.channel.send("rebooting :grin::+1:").then(() => { process.exit(); }); // eslint-disable-line no-undef
 		} else {
 			message.channel.send("no");
 		}

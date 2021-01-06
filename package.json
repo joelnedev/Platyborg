@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/JuhJuhButts/Chintow-2#readme",
   "dependencies": {
-    "discord.js": "^12.3.1",
+    "discord-slash-commands-client": "^1.1.1",
+    "discord.js": "git+https://github.com/MatteZ02/discord.js.git",
     "pm2": "^4.5.0"
   },
   "devDependencies": {

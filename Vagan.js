@@ -2,120 +2,195 @@
 
 /*
 For the sake of transparency, I'm gonna add comments explaining almost every line (and do my best not to get too technical so 8 year olds like Spoons can understand :trolololo:). 
-I want to make sure that the admins' trust in me/Chintow is rightfully placed. 
-If any further elaboration/explanation is needed, dm me (you probably already know, but it's JuhJuhButt#1234) or file an issue on the GitHub.
-This bot is made mostly for the memes, but it also has real functions such as posting to #showcase (similar to how #suggestions works) and starboard (coming soon to a bookstore near you).
+I want to make sure that the admins' trust in me/Vagan is rightfully placed. 
+If any further elaboration/explanation is needed, dm me (you probably already know, but it's JuhJuhButt#7818) or file an issue on the GitHub.
+This bot is made mostly for the memes, but it also has real functions such as posting to #showcase (similar to how #suggestions works) and a unb-style economy.
 */
 
 // This block sets important things needed throughout the script.
+
 // Of course, I need to import the Discord.js library to use it. I'll be calling it via "Discord".
+// eslint-disable-next-line no-undef
 const Discord = require("discord.js");
 
-// For my bot to have a user, it needs a client, similar to how you need a mobile or desktop client to get to Discord. Most people call it using "client", 
+// For my bot to have a user, it needs a client similar to how you need a mobile or desktop client to get to Discord. Most people call it using "client", 
 // but I feel that "bot" is more concise and transparent.
 const bot = new Discord.Client();
 
 // Every bot needs a prefix, this is pretty self-explanatory.
-const { prefix, token } = require("./info/config.json");
+// eslint-disable-next-line no-undef
+const { prefix, token, godModeUsers } = require("./info/config.json");
 
 // Get random reply messages to use later.
+// eslint-disable-next-line no-undef
 const { errorReplies } = require("./info/randomMessages.json");
 
-// Simplified: finds commands. I'm sure that if you're technical enough for that to be basic, you can read this on your own (and are probably the wored or lonk).
+// Allows me to call Users, CurrencyShop, my database program, and a currency cache later in the file.
+// eslint-disable-next-line no-undef
+/* const { Users, CurrencyShop } = require("./dbObjects");
+// eslint-disable-next-line no-undef
+const { Op } = require("sequelize");
+const currency = new Discord.Collection();
+*/
+
+// Messing around with slash commands rn and don't feel like doing it through http requests
+// eslint-disable-next-line no-undef
+const interactions = require("discord-slash-commands-client"); 
+// eslint-disable-next-line no-unused-vars
+const client = new interactions.Client(token, "766295959700897813");
+
+
+
+// Finds files in ./commands that end in .js, then add it to the bot.commands section.
+// eslint-disable-next-line no-undef
 const fs = require("fs");
+// eslint-disable-next-line no-undef
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 bot.commands = new Discord.Collection();
 for (const file of commandFiles) {
+	// eslint-disable-next-line no-undef
 	const command = require(`./commands/${file}`);
 	bot.commands.set(command.name, command);
 }
 
-// This code block runs only once, on the event "ready" which triggers once my bot has logged in and is ready to interact with Discord.
-bot.once("ready", () => {
+const slashFiles = fs.readdirSync("./slash").filter(file => file.endsWith(".js"));
+client.commands = new Discord.Collection();
+for (const file of slashFiles) {
+	// eslint-disable-next-line no-undef
+	const slash = require(`./slash/${file}`);
+	client.commands.set(slash.name, slash);
+}
 
-	// This sets the bot's status to "Making beancurd".
-	bot.user.setActivity("YouTube tutorials of beancurd", {type: "WATCHING"});
+// Sets helpful methods to add money to and get the balance of a specified user.
+/* Reflect.defineProperty(currency, "add", {
+	// eslint-disable-next-line func-name-matching 
+	value: async function add(id, amount) {
+		const user = currency.get(id);
+		if (user) {
+			user.balance += Number(amount);
+			return user.save();
+		}
+		const newUser = await Users.create({ user_id: id, balance: amount });
+		currency.set(id, newUser);
+		return newUser;
+	},
+});
 
+Reflect.defineProperty(currency, "getBalance", {
+	// eslint-disable-next-line func-name-matching
+	value: function getBalance(id) {
+		const user = currency.get(id);
+		return user ? user.balance : 0;
+	},
+});
+*/
+
+// This code block runs only once on the event "ready", which triggers once my bot has logged in and is ready to interact with Discord.
+bot.once("ready", async () => {
+
+	// This sets the bot's status to "Playing with guns | amazing pfp by talk14#5057".
+	bot.user.setActivity("with guns | amazing pfp by talk14#5057");
+	
 	// In the terminal from which my bot is launched, it will log "I'm in."
+	// eslint-disable-next-line no-undef
 	console.log("I'm in.");
+
+	// This code block syncs my currency cache collection with my persistant database.
+	/* const storedBalances = await Users.findAll();
+	storedBalances.forEach(b => currency.set(b.user_id, b));
+	*/
+	for (const file of slashFiles) {
+		// eslint-disable-next-line no-undef
+		const slash = require(`./slash/${file}`);
+		client.interactions
+			.createCommand({
+				name: slash.name,
+				description: slash.description,
+			})
+			// eslint-disable-next-line no-undef
+			.then(console.log)
+			// eslint-disable-next-line no-undef
+			.catch(console.error);
+		for (const alias of slash.aliases) {
+			client.interactions
+				.createCommand({
+					name: alias,
+					description: slash.description,
+				})
+			// eslint-disable-next-line no-undef
+				.then(console.log)
+			// eslint-disable-next-line no-undef
+				.catch(console.error);
+		}
+		
+	}
 });
 
 // This code block runs every time a reaction is added to a message, and passes the reaction object for usage inside the callback script.
 bot.on("messageReactionAdd", reaction => {
-	async function starboard(reaction, user) {
-		const message = reaction.message;
+	if (!reaction.message.channel.id === "showcaseid" || !reaction.message.author.id === bot.user.id) return;
+});
 
-		// This is the first check where we check to see if the reaction is not the unicode star emote.
-		if (reaction.emoji.name !== "⭐") return;
+bot.on("interactionCreate", async interaction => {
 
-		// Here we check to see if the person who reacted is the person who sent the original message.
-		if (message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages.`);
+	// This slices messages into arguments and ignores multiple spaces in a row.
+	const args = interaction.content.slice(prefix.length).split(/ +/);
 
-		// This is our final check, checking to see if message was sent by a bot.
-		if (message.author.bot) return message.channel.send(`${user}, you cannot star bot messages.`);
+	// It then indexes the commands from the ./slash folder.
+	const command = client.commands.get(interaction.name)
+		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(interaction.name));
 
-		// Here we set the starboard channel. 
-		const starboardChannel = message.client.channels.cache.get("");
-		const fetchedMessages = await starboardChannel.messages.fetch({ limit: 100 });
-		const stars = fetchedMessages.find(m => m.embeds[0].footer.text.startsWith("⭐") && m.embeds[0].footer.text.endsWith(message.id));
-		if (stars) {
-			// I barely know what's going on in this line 
-			const star = /^⭐\s([0-9]{1,3})\s\|\s([0-9]{17,20})/.exec(stars.embeds[0].footer.text);
-			const foundStar = stars.embeds[0];
-			const image = message.attachments.size > 0 ? await this.extension(reaction, message.attachments.array()[0].url) : "";
-			const embed = new Discord.MessageEmbed()
-				.setColor(foundStar.color)
-				.setDescription(foundStar.description)
-				.setAuthor(message.author.tag, message.author.displayAvatarURL)
-				.setTimestamp()
-				.setFooter(`⭐ ${parseInt(star[1]) + 1} | ${message.id}`)
-				.setImage(image);
-			const starMsg = await starboardChannel.messages.fetch(stars.id);
-			await starMsg.edit({ embed });
+	// If a command requires arguments but none are provided, let them know.
+	if (command.args === true && !args.length) {
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Error 🚨")
+			.setColor("#ff0000")
+			.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+			.addField("Error", "Insufficient information", true);
+
+		// If the command has defined usage, provide it to the user.
+		if (command.usage) {
+			embed.addField("Usage:", prefix + command.name + command.usage);
 		}
-		if (!stars) {
-			const image = message.attachments.size > 0 ? await this.extension(reaction, message.attachments.array()[0].url) : "";
-			if (image === "" && message.cleanContent.length < 1) return message.channel.send(`${user}, you cannot star an empty message.`);
+
+		// Send the embed and handle an error if one occurs.
+		interaction.channel.send(embed).catch((error) => {
 			const embed = new Discord.MessageEmbed()
-				.setColor(15844367)
-				.setDescription(message.cleanContent)
-				.setAuthor(message.author.tag, message.author.displayAvatarURL)
-				.setTimestamp(new Date())
-				.setFooter(`⭐ 1 | ${message.id}`)
-				.setImage(image);
-			await starboardChannel.send({ embed });
-		}
+				.setTitle("Error 🚨")
+				.setColor("#ff0000")
+				.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+				.addField("Error", "An error has occurred.");
+			interaction.channel.send(embed
+				.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+				.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
+			bot.users.cache.get("268138992606773248").send(embed.addField("Link:", interaction.url).addField("Error:", error));
+		});
+		return;
 	}
 
-	/*// Here we add the this.extension function to check if there's anything attached to the message.
-	extension(reaction, attachment) {
-		const imageLink = attachment.split('.');
-		const typeOfImage = imageLink[imageLink.length - 1];
-		const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
-		if (!image) return '';
-		return attachment;
-	}*/
-	starboard(reaction, reaction.message.member.nickname);
+	// This will run different functions based on the command executed. If something goes wrong, it lets the user and I know.
+	try {
+		// eslint-disable-next-line no-undef
+		command.execute(interaction, args, Discord, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies);
+	} catch (error) {
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Error 🚨")
+			.setColor("#ff0000")
+			.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+			.addField("Error", "An error has occurred.");
+		interaction.channel.send(embed
+			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+			.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
+		bot.users.cache.get("268138992606773248").send(embed.addField("Link:", interaction.url).addField("Error:", error));
+	}
+	
 });
 
 // This code block runs every time a message is sent, and passes the message object for usage inside the callback script.
-bot.on("message", message => {
+bot.on("message", async message => {
 
-	// This function makes it easy to send errors,
-	function errorFunction(message, error) {
-		const embed = new Discord.MessageEmbed()
-			.setTitle("Error :rotating_light:")
-			.setColor("#ff0000")
-			.setAuthor(message.member.nickname, message.author.avatarURL())
-			.addField("Error", error);
-		message.channel.send(embed
-			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
-			.addField("Don't ping dev", "No need to ping JuhJuhButt, he's already been sent a copy of the error message."));
-		bot.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url));
-		
-	}
-
-	// These lines initiate the sets "talkedRecently" and "showcaseCooldown". It is by no means perfect, but it is a funcioning cooldown system.
+	// These lines initiate the sets "talkedRecently" and "showcaseCooldown". It isn't perfect, but it is a funcioning cooldown system.
 	const talkedRecently = new Set;
 	const showcaseCooldown = new Set;
 
@@ -124,8 +199,8 @@ bot.on("message", message => {
 		message.channel.send("egis");
 	}
 
-	// Besides messages containing "egis", Chintow will ignore messages that don't start with the prefix or are from other bots.
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	// Besides messages containing "egis", Vagan will ignore messages that don't start with the prefix, are from other bots, or are sent via dm.
+	if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type === "dm") return;
 
 	// This slices messages into arguments and ignores multiple spaces in a row.
 	const args = message.content.slice(prefix.length).split(/ +/);
@@ -133,7 +208,7 @@ bot.on("message", message => {
 	// This takes the first argument out of the array and sets it as the command name.
 	const commandName = args.shift().toLowerCase();
 
-	// It then indexes the commands in the ./commands folder.
+	// It then indexes the commands from the ./commands folder.
 	const command = bot.commands.get(commandName)
 		|| bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
@@ -144,28 +219,99 @@ bot.on("message", message => {
 		return;
 	}
 
-	// If the comand doesn't exist, let the user know
-	if (!command) {
-		message.channel.send(errorReplies[Math.floor(Math.random() * errorReplies.length)]);
-		return;
-	}
-	// If a user has used showcase recently, dm them with an explanation about the cooldown.
-	if (showcaseCooldown.has(message.author.id)) {
-		message.author.send("You can post one showcase every 5 minutes. To discuss a showcase, use the appropriate channel (or sopones wil bane you :banned:)");
-		return;
-	}
-
 	// After exiting if they've talked recently, add them to the "talkedRecently" array for 5000 ms (5 seconds)
 	talkedRecently.add(message.author.id);
+	// eslint-disable-next-line no-undef
 	setTimeout(() => {
 		talkedRecently.delete(message.author.id);
 	}, 5000);
 
-	// This will run different functions based on the command executed. If something goes wrong, let the user and I know.
+	// If a user has used showcase recently, dm them with an explanation about the cooldown.
+	if (showcaseCooldown.has(message.author.id)) {
+		message.author.send("You can post one showcase every 5 minutes. To discuss a showcase, use the appropriate channel (or sopones wil bane you)");
+		return;
+	}
+
+	// Secret eval command
+	// I'm locking it to myself instead of godmode users cause this is fucking dangerous (gives them access to my whole server which is currently my school laptop)
+
+	const clean = text => {
+		if (typeof(text) === "string")
+			return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+		else
+			return text;
+	};
+	
+	if (message.content.startsWith(prefix + "eval")) {
+		if(message.author.id !== "268138992606773248") return;
+		try {
+			const code = args.join(" ");
+			let evaled = eval(code);
+	
+			if (typeof evaled !== "string")
+				// eslint-disable-next-line no-undef
+				evaled = require("util").inspect(evaled);
+	
+			return message.channel.send(clean(evaled), {code:"xl"});
+		} catch (err) {
+			return message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+		}
+	}
+
+	// If the comand doesn't exist, let the user know
+	if (!command) {
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Error 🚨")
+			.setColor("#ff0000")
+			.setAuthor(message.member.nickname, message.author.avatarURL())
+			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+			.addField("Error", "Command not found/invalid syntax", true);
+		message.channel.send(embed);
+	}
+
+	// If a command requires arguments but none are provided, let them know.
+	if (command.args === true && !args.length) {
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Error 🚨")
+			.setColor("#ff0000")
+			.setAuthor(message.member.nickname, message.author.avatarURL())
+			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+			.addField("Error", "Insufficient information", true);
+
+		// If the command has defined usage, provide it to the user.
+		if (command.usage) {
+			embed.addField("Usage:", prefix + command.name + command.usage);
+		}
+
+		// Send the embed and handle an error if one occurs.
+		message.channel.send(embed).catch((error) => {
+			const embed = new Discord.MessageEmbed()
+				.setTitle("Error 🚨")
+				.setColor("#ff0000")
+				.setAuthor(message.member.nickname, message.author.avatarURL())
+				.addField("Error", "An error has occurred.");
+			message.channel.send(embed
+				.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+				.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
+			bot.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
+		});
+		return;
+	}
+
+	// This will run different functions based on the command executed. If something goes wrong, it lets the user and I know.
 	try {
-		command.execute(message, args, Discord, showcaseCooldown);
+		// eslint-disable-next-line no-undef
+		command.execute(message, args, Discord, showcaseCooldown, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies);
 	} catch (error) {
-		errorFunction(message, error);
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Error 🚨")
+			.setColor("#ff0000")
+			.setAuthor(message.member.nickname, message.author.avatarURL())
+			.addField("Error", "An error has occurred.");
+		message.channel.send(embed
+			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
+			.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
+		bot.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
 	}
 });
 

@@ -2,6 +2,7 @@ module.exports = { // eslint-disable-line no-undef
 	name: "Post",
 	description: "Show off your epic talent in #showcase",
 	aliases: ["show", "showcase", "art"],
+	usage: " [<caption>]",
 	// eslint-disable-next-line no-unused-vars
 	execute(message, args, Discord, showcaseCooldown) {
 		// eslint-disable-next-line no-undef
@@ -9,7 +10,7 @@ module.exports = { // eslint-disable-line no-undef
 				
 		// Creates a message embed and assigns properties on declaration.
 		const embed = new Discord.MessageEmbed()
-			.setAuthor(message.author.nickname, message.author.avatarURL())
+			.setAuthor(message.author.tag, message.author.avatarURL())
 			.setColor("#00ff00")
 			.setTitle(`Showcase by ${message.member.nickname}`)
 			// eslint-disable-next-line no-undef

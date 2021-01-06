@@ -1,32 +1,47 @@
+/* eslint-disable no-case-declarations */
 module.exports = { // eslint-disable-line no-undef
-	name: 'Info',
-	description: 'Provides helpful information about the server, a channel, or a staff/active member.',
+	name: "Info",
+	description: "Provides helpful information about the server, a channel, or a staff/active member. For more technical details, use RoboTop.",
 	aliases: [],
 	args: true,
-	usage: " <\"server\" | staff member | active member>",
+	usage: " <\"server\" | channel | staff/active member>",
 	// eslint-disable-next-line no-unused-vars
-	execute(message, args, Discord) {
-        switch(args[0]){
-            // If the requested information is for stoneworm or any of his nicknames, provide helpful information about them.
-            case "stoneworm":
-            case "stonwrom":
-            case "sotenwored":
-            case "stenwor":
-            case "wored":
-            case "stoenwarudo":
-                const stoneworm = ["stoneworm", "sotenwored", "stonwrom", "stenwor", "wored", "the wored", "stoenwarudo", "sonic admin",];
-                message.channel.send(`${stoneworm[Math.floor(Math.random() * stoneworm.length)]} bad lol`);
-                break;
-                
-            // If the requested information is for spoons or any of his nicknames, provide helpful information about them.
-            case "spoons":
-            case "spoon":
-            case "spoonman":
-            case "sopons":
-            case "spones":
-            case "sopones":
-                message.channel.send("he is an extremely amazing and totally awesome admin (please help if i show any disrespect i will be killed :sob:)");
-                break;
-        }
+	execute(message, args, Discord, prefix) {
+		switch(args[0]){
+		case "stoneworm":
+			const stoneworm = ["stoneworm", "sotenwored", "stonwrom", "stenwor", "wored", "the wored", "stoenwarudo", "sonic admin", "stonorm", "stokenchurch"];
+			message.channel.send(`${stoneworm[Math.floor(Math.random() * stoneworm.length)]} bad lol`);
+			break;
+		case "spoons":
+			message.channel.send("he is an extremely amazing and totally awesome admin (please help if i show any disrespect i will be killed :sob:)");
+			break;
+		case "JuhJuhButt":
+		case "juhjuhbutt":
+		case "JuhJuh":
+		case "juhjuh":
+		case "Juh":
+		case "juh":
+			message.channel.send("The best mod in the server, and also my dad (he created me)");
+			break;
+		case "Vagan":
+		case "vagan":
+		case "bot":
+		case "you":
+			message.channel.send(`I'm Vagan, a character from Killer Bean Forever. (Technically I'm dead but that's not the point.) You can see what I can do by sending ${prefix}help.`);
+			break;
+		case "Shadow":
+		case "shadow":
+		case "Shadowbeans":
+		case "Shadowbean":
+		case "ShadowBeans":
+		case "ShadowBean":
+		case "shadowbeans":
+		case "shadowbean":
+		case "shadowBeans":
+		case "shadowBean":
+		case "sb":
+			message.channel.send("");
+			break;
+		}
 	},
 };
