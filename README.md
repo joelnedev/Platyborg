@@ -10,9 +10,9 @@ Any help with developing the bot is greatly appreciated. You don't have to learn
 
 As noted above, you can contribute to the bot by
 
--Commenting on issues/pull requests
--Creating issues or starting discussions
--Emailing me
+- Commenting on issues/pull requests
+- Creating issues or starting discussions
+- Emailing me
 
 ### Programming
 
@@ -21,4 +21,4 @@ Even if you've just started with djs, you can still look at my code and learn fr
 
 ## Security Policy
 
-See [SECURITY.md](https://github.com/JuhJuhButts/Vagan/blob/eff3f9915e9fa363da2acd9b03e23057202b91ae/SECURITY.md) for information about vulnerabilities and exploits.
+See [SECURITY.md](https://github.com/JuhJuhButts/Vagan/blob/main/SECURITY.md) for information about vulnerabilities and exploits.
