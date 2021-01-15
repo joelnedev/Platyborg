@@ -49,5 +49,6 @@ module.exports = { // eslint-disable-line no-undef
 		//	message.channel.send("Killer Bean Club is a cool pl")
 			break;
 		}
+		message.channel.send("*This command is deprecated. It will be removed in about a week in favor of slash commands.*");
 	},
 };

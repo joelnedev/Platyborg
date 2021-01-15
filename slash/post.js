@@ -3,23 +3,21 @@ module.exports = { // eslint-disable-line no-undef
 	description: "Show off your epic talent in #showcase",
 	aliases: ["show", "showcase", "art"],
 	usage: " [<caption>]",
+	responseType: 2,
 	// eslint-disable-next-line no-unused-vars
-	execute(message, args, Discord, showcaseCooldown) {
-		// eslint-disable-next-line no-undef
-		const godModeUsers = require("../info/config.json");
-				
+	execute(interaction, args, Discord, nickname, client, bot, /* currency, CurrencyShop, Users, Op, */ config, godModeUsers, errorReplies, showcaseCooldown) {				
 		// Creates a message embed and assigns properties on declaration.
 		const embed = new Discord.MessageEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL())
+			.setAuthor(nickname, interaction.author.avatarURL())
 			.setColor("#00ff00")
-			.setTitle(`Showcase by ${message.member.nickname}`)
+			.setTitle(`Showcase by ${interaction.member.nickname}`)
 			// eslint-disable-next-line no-undef
-			.setFooter("If you want to post your own showcase, go to # and type `/post`")
+			.setFooter("If you want to post your own showcase, go to any channel and type `/post`")
 			.setTimestamp();
 		
 		// Assign properties if they exist
-		if (message.attachments) {
-			embed.setImage(message.attachments.last().proxyURL); 
+		if (interaction.attachments) {
+			embed.setImage(interaction.attachments.last().proxyURL); 
 		} else {
 			embed.addField("No attachment", "The author didn't attach anything");
 		}
@@ -30,15 +28,14 @@ module.exports = { // eslint-disable-line no-undef
 		}
 		
 		// Cooldown (but not for god mode users cause they may be testing the command)
-		if (!godModeUsers.some(ID => message.author.id === ID)) {
-			showcaseCooldown.add(message.author.id);
+		if (!godModeUsers.some(ID => interaction.author.id === ID)) {
+			showcaseCooldown.add(interaction.author.id);
 			// eslint-disable-next-line no-undef
 			setTimeout(() => {
-				showcaseCooldown.delete(message.author.id);
+				showcaseCooldown.delete(interaction.author.id);
 			}, 300000);
 		}
 		// Send the embed in #showcase
-		message.client.channels.cache.get("702481578529652796").send(embed)
-			.then(message.channel.send("*This command is deprecated. It will be removed in about a week in favor of slash commands.*"));
+		bot.channels.cache.get("702481578529652796").send(embed);
 	},
 };

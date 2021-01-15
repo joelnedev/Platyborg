@@ -1,12 +1,13 @@
-const { prefix } = require("../info/config.json"); // eslint-disable-line no-undef
 module.exports = { // eslint-disable-line no-undef
 	name: "help",
 	description: "Tells you what things there are and what the thing does.",
 	aliases: ["h"],
 	usage: " [<command>]",
-	execute(message, args, Discord, errorReplies) {
+	responseType: 5,
+	execute(interaction, args, Discord, nickname, client, bot, /* currency, CurrencyShop, Users, Op, */ config, godModeUsers, errorReplies) {
 		// Allows me to call the commands array later in the script.
-		const { commands } = message.client;
+		const { commands } = client;
+		const { prefix } = config.bot;
 
 		// If the user doesn't include arguments, send the regular help message and exit.
 		if (!args.length) {
@@ -15,18 +16,17 @@ module.exports = { // eslint-disable-line no-undef
 				.setColor("#03b1fc")
 				.setDescription(`Send \`${prefix}help [thing]\` to get info on a specific command`)
 				.addField("Commands", commands.map(command => command.name).join("\n "), true);
-			message.channel.send(embed1)
-				.then(message.channel.send("*This command is deprecated. It will be removed in about a week in favor of slash commands.*"))
+			interaction.channel.send(embed1)
 				.catch(error => {
 					const embed = new Discord.MessageEmbed()
 						.setTitle("Error 🚨")
 						.setColor("#ff0000")
-						.setAuthor(message.member.nickname, message.author.avatarURL())
+						.setAuthor(nickname, interaction.author.avatarURL())
 						.addField("Error", "An error has occurred.");
-					message.channel.send(embed
+					interaction.channel.send(embed
 						.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 						.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
-					message.client.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
+					bot.channels.cache.get("797151756613058600").send(embed.addField("Link:", bot.user.lastMessage.url).addField("Error:", error));
 				}); return;
 		}
 
@@ -37,11 +37,10 @@ module.exports = { // eslint-disable-line no-undef
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Error :rotating_light:")
 				.setColor("#ff0000")
-				.setAuthor(message.member.nickname, message.author.avatarURL())
+				.setAuthor(nickname, interaction.author.avatarURL())
 				.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 				.addField("Error", "Command not found/invalid syntax", true);
-			message.channel.send(embed)
-				.then(message.channel.send("*This command is deprecated. It will be removed in about a week in favor of slash commands.*"));
+			interaction.channel.send(embed);
 			return;
 		}
 
@@ -56,6 +55,6 @@ module.exports = { // eslint-disable-line no-undef
 		if (command.usage) embed2.addField("Usage", `${prefix}${command.name} ${command.usage}`, false);
 		if (command.args) embed2.addField("Arguments required", ":white_check_mark:", true);
 		else embed2.addField("Arguments required", ":x:", true);
-		message.channel.send(embed2);
+		interaction.channel.send(embed2);
 	},
 };

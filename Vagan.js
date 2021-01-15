@@ -1,4 +1,4 @@
-/* eslint-disable no-case-declarations */
+// eslint-disable no-case-declarations 
 
 /*
 For the sake of transparency, I'm gonna add comments explaining almost every line (and do my best not to get too technical so 8 year olds like Spoons can understand :trolololo:). 
@@ -19,7 +19,7 @@ const bot = new Discord.Client();
 
 // Every bot needs a prefix, this is pretty self-explanatory.
 // eslint-disable-next-line no-undef
-const { prefix, token, godModeUsers } = require("./info/config.json");
+const config = require("./info/config.json");
 
 // Get random reply messages to use later.
 // eslint-disable-next-line no-undef
@@ -33,15 +33,23 @@ const { Op } = require("sequelize");
 const currency = new Discord.Collection();
 */
 
-// Messing around with slash commands rn and don't feel like doing it through http requests
+// Uses npm modules to create, get, edit, and delete slash commands.
 // eslint-disable-next-line no-undef
-const interactions = require("discord-slash-commands-client"); 
-// eslint-disable-next-line no-unused-vars
-const client = new interactions.Client(token, "766295959700897813");
+const discordSlashCommandsClient = require("discord-slash-commands-client"); 
+
+// Allows me to call my interactions stuff via "client".
+const client = new discordSlashCommandsClient.Client(config.bot.token, "766295959700897813");
+
+// Allows me to call more interactions stuff via "interactions".
+// eslint-disable-next-line no-undef
+const interactions = require("da-slash");
 
 
+// These lines initiate the sets "talkedRecently" and "showcaseCooldown". It isn't perfect, but it is a funcioning cooldown system.
+const talkedRecently = new Set;
+const showcaseCooldown = new Set;
 
-// Finds files in ./commands that end in .js, then add it to the bot.commands section.
+// Finds files in ./commands that end in .js, then adds it to the bot.commands collection.
 // eslint-disable-next-line no-undef
 const fs = require("fs");
 // eslint-disable-next-line no-undef
@@ -53,6 +61,7 @@ for (const file of commandFiles) {
 	bot.commands.set(command.name, command);
 }
 
+// Finds files in ./slash that end in .js, then adds it to the client.commands collection.
 const slashFiles = fs.readdirSync("./slash").filter(file => file.endsWith(".js"));
 client.commands = new Discord.Collection();
 for (const file of slashFiles) {
@@ -75,7 +84,6 @@ for (const file of slashFiles) {
 		return newUser;
 	},
 });
-
 Reflect.defineProperty(currency, "getBalance", {
 	// eslint-disable-next-line func-name-matching
 	value: function getBalance(id) {
@@ -99,59 +107,65 @@ bot.once("ready", async () => {
 	/* const storedBalances = await Users.findAll();
 	storedBalances.forEach(b => currency.set(b.user_id, b));
 	*/
-	for (const file of slashFiles) {
-		// eslint-disable-next-line no-undef
-		const slash = require(`./slash/${file}`);
-		client.interactions
-			.createCommand({
-				name: slash.name,
-				description: slash.description,
-			})
-			// eslint-disable-next-line no-undef
-			.then(console.log)
-			// eslint-disable-next-line no-undef
-			.catch(console.error);
-		for (const alias of slash.aliases) {
-			client.interactions
-				.createCommand({
-					name: alias,
-					description: slash.description,
-				})
-			// eslint-disable-next-line no-undef
-				.then(console.log)
-			// eslint-disable-next-line no-undef
-				.catch(console.error);
-		}
-		
-	}
 });
 
 // This code block runs every time a reaction is added to a message, and passes the reaction object for usage inside the callback script.
-bot.on("messageReactionAdd", reaction => {
-	if (!reaction.message.channel.id === "showcaseid" || !reaction.message.author.id === bot.user.id) return;
+bot.on("messageReactionAdd", async reaction => {
+	// Ignores if the reaction wasn't made in showcase, the reaction message wasn't sent by Vagan, or if the reaction emoji isn't a star.
+	if (!reaction.message.channel.id === "showcase id" || !reaction.message.author.id === bot.user.id || !reaction.emoji.name === "star") return;
+	
+	// This code block runs only if the number of stars on the message is 8.
+	if (reaction.count === 8) {
+		// Finds the color based on the username/nickname provided in the author field of the embed (if it can't find the user, it sets it to the blue I use for informational embeds)
+		const color = bot.users.cache.find(user => user.username === reaction.message.embeds[0].author.name)
+			|| bot.users.cache.find(user => user.nickname === reaction.message.embeds[0].author.name)
+			|| "#03b1fc";
+
+		// Constructs an embed and assigns properties on declaration.
+		const embed = new Discord.MessageEmbed()
+			.setTitle("Message starred")
+			.setTimestamp()
+			.setColor(color);
+		
+		// Assigns values if they exist.
+		if (!reaction.message.embeds[0].description === "The author didn't add a caption") embed.setDescription(reaction.message.embeds[0].description);
+		if (reaction.message.embeds[0].image) embed.setImage(reaction.message.embeds[0].image.url);
+
+		// Sends the embed.
+		bot.channels.cache.get("starboard id").send(embed);
+	}
 });
 
+
+// This code block runs every time a slash command is used, and passes the interaction object for usage inside the callback script.
 bot.on("interactionCreate", async interaction => {
 
-	// This slices messages into arguments and ignores multiple spaces in a row.
-	const args = interaction.content.slice(prefix.length).split(/ +/);
+	// This splits the content after the main command into arguments and ignores multiple spaces in a row.
+	const args = interaction.content.split(/ +/);
 
 	// It then indexes the commands from the ./slash folder.
 	const command = client.commands.get(interaction.name)
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(interaction.name));
+
+	const nickname = interaction.member.nickname
+		||interaction.author.username;
+
+	bot.api.interactions(interaction.id, interaction.token).callback.post({
+		type: command.responseType
+	});
 
 	// If a command requires arguments but none are provided, let them know.
 	if (command.args === true && !args.length) {
 		const embed = new Discord.MessageEmbed()
 			.setTitle("Error 🚨")
 			.setColor("#ff0000")
-			.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+			.setAuthor(nickname, interaction.author.avatarURL())
 			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 			.addField("Error", "Insufficient information", true);
 
 		// If the command has defined usage, provide it to the user.
 		if (command.usage) {
-			embed.addField("Usage:", prefix + command.name + command.usage);
+			embed.addField("Usage:", `/${command.name} ${command.usage}`);
 		}
 
 		// Send the embed and handle an error if one occurs.
@@ -159,12 +173,12 @@ bot.on("interactionCreate", async interaction => {
 			const embed = new Discord.MessageEmbed()
 				.setTitle("Error 🚨")
 				.setColor("#ff0000")
-				.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+				.setAuthor(nickname, interaction.author.avatarURL())
 				.addField("Error", "An error has occurred.");
 			interaction.channel.send(embed
 				.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 				.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
-			bot.users.cache.get("268138992606773248").send(embed.addField("Link:", interaction.url).addField("Error:", error));
+			bot.channels.cache.get("797151756613058600").send(embed.addField("Link:", bot.user.lastMessage.url).addField("Error:", error));
 		});
 		return;
 	}
@@ -172,17 +186,17 @@ bot.on("interactionCreate", async interaction => {
 	// This will run different functions based on the command executed. If something goes wrong, it lets the user and I know.
 	try {
 		// eslint-disable-next-line no-undef
-		command.execute(interaction, args, Discord, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies);
+		command.execute(interaction, args, Discord, nickname, client, bot, /* currency, CurrencyShop, Users, Op, */ config.bot.prefix, godModeUsers, errorReplies, showcaseCooldown);
 	} catch (error) {
 		const embed = new Discord.MessageEmbed()
 			.setTitle("Error 🚨")
 			.setColor("#ff0000")
-			.setAuthor(interaction.member.nickname, interaction.author.avatarURL())
+			.setAuthor(nickname, interaction.author.avatarURL())
 			.addField("Error", "An error has occurred.");
 		interaction.channel.send(embed
 			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 			.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
-		bot.users.cache.get("268138992606773248").send(embed.addField("Link:", interaction.url).addField("Error:", error));
+		bot.channels.cache.get("797151756613058600").send(embed.addField("Link:", bot.user.lastMessage.url).addField("Error:", error));
 	}
 	
 });
@@ -190,20 +204,16 @@ bot.on("interactionCreate", async interaction => {
 // This code block runs every time a message is sent, and passes the message object for usage inside the callback script.
 bot.on("message", async message => {
 
-	// These lines initiate the sets "talkedRecently" and "showcaseCooldown". It isn't perfect, but it is a funcioning cooldown system.
-	const talkedRecently = new Set;
-	const showcaseCooldown = new Set;
-
 	// This block sends "egis" if someone says egis outside of the #egis channel. To prevent loopholes, it ignores itself.
-	if (["egis", "egis"].some(egis => message.content.toLowerCase().includes(egis)) && !message.channel.id === "712991588376117308" && message.author.id !== bot.user.id) {
+	if (["egis", "egis"].some((egis) => message.content.toLowerCase().includes(egis)) && !message.channel.id === "712991588376117308" && message.author.id !== bot.user.id) {
 		message.channel.send("egis");
 	}
 
 	// Besides messages containing "egis", Vagan will ignore messages that don't start with the prefix, are from other bots, or are sent via dm.
-	if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type === "dm") return;
+	if (!message.content.startsWith(config.bot.prefix) || message.author.bot || message.channel.type === "dm") return;
 
-	// This slices messages into arguments and ignores multiple spaces in a row.
-	const args = message.content.slice(prefix.length).split(/ +/);
+	// This splits messages into arguments and ignores multiple spaces in a row.
+	const args = message.content.slice(config.bot.prefix.length).split(/ +/);
 
 	// This takes the first argument out of the array and sets it as the command name.
 	const commandName = args.shift().toLowerCase();
@@ -211,6 +221,9 @@ bot.on("message", async message => {
 	// It then indexes the commands from the ./commands folder.
 	const command = bot.commands.get(commandName)
 		|| bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+	
+	const nickname = message.member.nickname
+		|| message.author.username;
 
 	
 	// If a user used a command within 5 seconds, dm them and tell them to shut the up.
@@ -233,7 +246,7 @@ bot.on("message", async message => {
 	}
 
 	// Secret eval command
-	// I'm locking it to myself instead of godmode users cause this is fucking dangerous (gives them access to my whole server which is currently my school laptop)
+	// I'm locking it to specific people instead of godmode users cause this is fucking dangerous (gives them access to my whole server which is currently my school laptop)
 
 	const clean = text => {
 		if (typeof(text) === "string")
@@ -242,8 +255,8 @@ bot.on("message", async message => {
 			return text;
 	};
 	
-	if (message.content.startsWith(prefix + "eval")) {
-		if(message.author.id !== "268138992606773248") return;
+	if (message.content.startsWith(config.bot.prefix + "eval")) {
+		if(message.author.id !== "268138992606773248" || message.author.id !== "362374840201510914") return;
 		try {
 			const code = args.join(" ");
 			let evaled = eval(code);
@@ -280,7 +293,7 @@ bot.on("message", async message => {
 
 		// If the command has defined usage, provide it to the user.
 		if (command.usage) {
-			embed.addField("Usage:", prefix + command.name + command.usage);
+			embed.addField("Usage:", config.bot.prefix + command.name + command.usage);
 		}
 
 		// Send the embed and handle an error if one occurs.
@@ -293,7 +306,7 @@ bot.on("message", async message => {
 			message.channel.send(embed
 				.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 				.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
-			bot.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
+			bot.channels.cache.get("797151756613058600").send(embed.addField("Link:", message.url).addField("Error:", error));
 		});
 		return;
 	}
@@ -301,7 +314,7 @@ bot.on("message", async message => {
 	// This will run different functions based on the command executed. If something goes wrong, it lets the user and I know.
 	try {
 		// eslint-disable-next-line no-undef
-		command.execute(message, args, Discord, showcaseCooldown, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies);
+		command.execute(message, args, Discord, nickname, showcaseCooldown, /* currency, CurrencyShop, Users, Op, */ config, godModeUsers, errorReplies);
 	} catch (error) {
 		const embed = new Discord.MessageEmbed()
 			.setTitle("Error 🚨")
@@ -311,9 +324,9 @@ bot.on("message", async message => {
 		message.channel.send(embed
 			.setDescription(errorReplies[Math.floor(Math.random() * errorReplies.length)])
 			.addField("No action needed", "The dev has already recieved a copy of the error, you'll likely hear from him soon."));
-		bot.users.cache.get("268138992606773248").send(embed.addField("Link:", message.url).addField("Error:", error));
+		bot.channels.cache.get("797151756613058600").send(embed.addField("Link:", message.url).addField("Error:", error));
 	}
 });
 
-// Logs the bot into Discord. If I accidentally post the token to GitHub, Discord's "token-scanning gremlins" will automatically reset it. (see https://discord.com/channels/)
-bot.login(token);
+// Logs the bot into Discord. If I accidentally post the token to GitHub, Discord's "token-scanning gremlins" will automatically reset it. (see https://discord.com/channels/677965121116700723/677965383210237970/796369518049755177)
+bot.login(config.bot.token);

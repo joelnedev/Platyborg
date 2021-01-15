@@ -7,7 +7,7 @@ module.exports = { // eslint-disable-line no-undef
 	args: false, // If the command requires arguments or not
 	usage: " ", // How to use the command
 	// eslint-disable-next-line no-unused-vars
-	execute(message, args, Discord) {
+	execute(message, args, Discord, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies) {
 		// This is where the magic happens. Code to be executed when this command is run goes here.
 	},
 };
@@ -19,7 +19,19 @@ module.exports = { // eslint-disable-line no-undef
 	args: false, 
 	usage: " ", 
 	// eslint-disable-next-line no-unused-vars
-	execute(message, args, Discord) {
+	execute(interaction, args, Discord, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies) {
+		
+	},
+};
+
+module.exports = { // eslint-disable-line no-undef
+	name: "",
+	description: "",
+	aliases: [],
+	args: false, 
+	usage: " ", 
+	// eslint-disable-next-line no-unused-vars
+	execute(message, args, Discord, currency, CurrencyShop, Users, Op, prefix, godModeUsers, errorReplies) {
 		
 	},
 };

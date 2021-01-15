@@ -1,7 +1,10 @@
 {
-	"prefix": "/",
-	"token": "NzY2Mjk1OTU5NzAwODk3ODEz.X4hSuQ.rX9nBiU2tOPWLpanqxuTnitYoRI",
-	"godModeUsers": [
-		"268138992606773248", "720122607541682199"
-	]
+	"commands": {
+		"directory": "./slash/",
+		"subcategories": "false"
+	  },
+	"bot": {
+		"prefix": "~",
+		"token": "NzY2Mjk1OTU5NzAwODk3ODEz.X4hSuQ.UdU2IG2NS65kl24GaEH6N7ov4fg"
+	}
 }

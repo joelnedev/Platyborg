@@ -4,11 +4,12 @@ module.exports = { // eslint-disable-line no-undef
 	aliases: [],
 	args: false,
 	usage: " ",
+	responseType: 1,
 	// eslint-disable-next-line no-unused-vars
-	execute(message, args, Discord) {
+	execute(interaction, args, Discord, nickname, client, bot, /* currency, CurrencyShop, Users, Op, */ config, godModeUsers, errorReplies) {
 		const { pingReplies } = require("../info/randomMessages.json"); // eslint-disable-line no-undef
 		let then = new Date();
-		message.channel.send("Pinging...");
+		interaction.channel.send("Pinging...");
 		let now = new Date();
 		let ping = now.getTime() - then.getTime();
 		const embed = new Discord.MessageEmbed()
@@ -16,7 +17,6 @@ module.exports = { // eslint-disable-line no-undef
 			.setTitle("Pong")
 			.setDescription(pingReplies[Math.floor(Math.random() * pingReplies.length)])
 			.addField("Ping (ms)", ping, true);
-		message.channel.send(embed)
-			.then(message.channel.send("*This command is deprecated. It will be removed in about a week in favor of slash commands.*"));
+		interaction.channel.send(embed);
 	},
 };
