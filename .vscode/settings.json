@@ -1,0 +1,17 @@
+{
+	"files.autoSave": "onFocusChange",
+	"workbench.editor.wrapTabs": true,
+	"workbench.editor.decorations.badges": true,
+	"workbench.editor.decorations.colors": true,
+	"search.mode": "reuseEditor",
+	"files.exclude": {
+		"**/node_modules": true
+	},
+	"editor.renderWhitespace": "boundary",
+	"workbench.editor.pinnedTabSizing": "compact",
+	"workbench.startupEditor": "welcomePageInEmptyWorkbench",
+	"discord.lowerDetailsEditing": "Working on Vagan",
+	"discord.largeImageIdling": "Laziness",
+	"discord.lowerDetailsNoWorkspaceFound": "Working on something",
+	"git.allowForcePush": true,
+}

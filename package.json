@@ -1,37 +1,47 @@
 {
-  "name": "chintow",
-  "version": "2.0.0",
+  "name": "vagan",
+  "version": "3.0.0",
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
-  "main": "Chintow.js",
+  "main": "js/Vagan.js",
+  "engines": {
+    "node": "^14.15.1",
+    "npm": "^7.5.3"
+  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node -r dotenv/config --trace-warnings .",
+    "start": "pm2-runtime start ecosystem.config.js",
+    "stop": "pm2 stop all",
+    "compile": "tsc --project tsconfig.json",
+    "reset": "sudo rm -rf js/ && mkdir js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JuhJuhButts/Chintow-2.git"
+    "url": "git+https://github.com/JuhJuhButts/Vagan.git"
   },
   "keywords": [
-    "Chintow",
+    "Vagan",
     "Killer",
     "Bean",
     "Discord",
-    "Bot",
-    "Discord",
-    "Bot",
-    "Bean"
+    "Bot"
   ],
   "author": "JuhJuhButt",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JuhJuhButts/Chintow-2/issues"
+    "url": "https://github.com/JuhJuhButts/Vagan/issues",
+    "email": "evansjoe002@icloud.com"
   },
-  "homepage": "https://github.com/JuhJuhButts/Chintow-2#readme",
+  "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
   "dependencies": {
-    "discord-slash-commands-client": "^1.1.1",
-    "discord.js": "git+https://github.com/MatteZ02/discord.js.git",
-    "pm2": "^4.5.0"
+    "@joshdb/core": "^1.1.4",
+    "@joshdb/mongo": "^1.1.2",
+    "discord.js": "https://github.com/discordjs/discord.js.git",
+    "pm2": "^4.5.5"
   },
   "devDependencies": {
-    "eslint": "^7.11.0"
+    "@types/node": "^14.14.25",
+    "dotenv": "^8.2.0",
+    "typescript": "^4.2.2"
   }
 }
