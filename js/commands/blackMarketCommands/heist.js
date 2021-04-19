@@ -15,15 +15,15 @@ export default {
             const Vagan = interaction.bot;
             const config = Vagan.config.economy.crime;
             let fail = () => Math.random() * config.failRate;
-            let add = command.randomNumber(config.win.min, config.win.max);
-            let remove = command.randomNumber(config.fail.min, config.fail.max);
-            const winReplies = command.replaceReplies(Vagan.config.replies.crime.win, add);
-            const failReplies = command.replaceReplies(Vagan.config.replies.crime.fail, remove);
+            let add = command.tools.randomNumber(config.win.min, config.win.max);
+            let remove = command.tools.randomNumber(config.fail.min, config.fail.max);
+            const winReplies = command.tools.replaceReplies(Vagan.config.replies.crime.win, add);
+            const failReplies = command.tools.replaceReplies(Vagan.config.replies.crime.fail, remove);
             interaction.respond("What item would you like to use?");
-            interaction.channel.awaitMessages(m => m.author.id === interaction.author.id, { max: 1, time: 30000, errors: ["time"] })
+            interaction.channel.awaitMessages(m => m.author.id === interaction.author?.id, { max: 1, time: 30000, errors: ["time"] })
                 .then((collected) => __awaiter(this, void 0, void 0, function* () {
                 var _a;
-                const user = yield blackMarket.users.get(interaction.author.id);
+                const user = yield blackMarket.users.get(interaction.author?.id);
                 const item = (_a = collected.last()) === null || _a === void 0 ? void 0 : _a.content.toLowerCase();
                 const storedItem = yield blackMarket.items.find("name", item);
                 if (!storedItem) {
@@ -47,9 +47,9 @@ export default {
                 return interaction.respond("You took too long.");
             });
             const failed = fail();
-            failed > 0.5 ? yield blackMarket.add(interaction.author.id, add) : yield blackMarket.subtract(interaction.author.id, remove);
+            failed > 0.5 ? yield blackMarket.add(interaction.author?.id, add) : yield blackMarket.subtract(interaction.author?.id, remove);
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setDescription(failed > 0.5 ? winReplies[Math.floor(Math.random() * winReplies.length)] : failReplies[Math.floor(Math.random() * failReplies.length)])
                 .setColor(failed > 0.5 ? "00FF00" : "FF0000");
             interaction.respond(undefined, { embed });

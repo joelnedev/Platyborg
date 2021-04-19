@@ -42,13 +42,9 @@ export const blackMarket = {
                 bank: 0,
                 items: []
             };
-            console.log(id);
-            console.log(newUser);
             yield blackMarket.users.ensure(`${id}`, newUser);
-            console.log("innocentcitizensofnewjersey")
-            yield blackMarket.users.math(`${id}`, `${where}`, "add", amount);
+            yield blackMarket.users.math(`${id}.${where}`, "add", amount);
             const User = yield blackMarket.users.get(id);
-            console.log(User);
             return User;
         });
     },

@@ -10,9 +10,9 @@ export default {
 		const replies: string[] = command.tools.replaceReplies(Vagan.config.replies.work, add);
 
 		// Modify their balance, then send an embed with a random message containing their balance
-		await blackMarket.users.math(`${interaction.author.id}.cash`, "add", add);
+		await blackMarket.users.math(`${interaction.author?.id}.cash`, "add", add);
 		const embed = new MessageEmbed()
-			.setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+			.setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
 			.setDescription(replies[Math.floor(Math.random() * replies.length)])
 			.setColor("#00FF00");
 		interaction.respond(undefined, { embed });

@@ -261,7 +261,7 @@ export default new GlobalCommand({
 				command.args.amount = subcommand?.options?.[0].value;
 				break;
 			case "balance":
-				command.args.target = (subcommand?.options?.[0].value ? await Vagan.users.fetch(subcommand?.options?.[0].value) : interaction.author);
+				command.args.target = (subcommand?.options?.[0].value ? await Vagan.users.fetch(subcommand?.options?.[0].value) : interaction.author?);
 				break;
 			case "item":
 				command.args.target = subcommand?.options?.[0].value;

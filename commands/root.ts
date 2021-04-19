@@ -23,7 +23,7 @@ export default new GlobalCommand({
 		const Vagan = interaction.bot;
 		
 		// Only allows god mode users to use the command (and sends non god mode users a polite, informative message about why they cannot execute it)
-		if (!Vagan.hideout.godModeUsers.includes(interaction.author.id) || interaction.author.id !== "spoons id") {
+		if (!Vagan.hideout.godModeUsers.includes(interaction.author?.id) || interaction.author?.id !== "spoons id") {
 			const fail = [ "nawwyaintfr", "noyoucannotpossiblyserious", "trolort", "nah", "fail", "failure", "you arent the boss of me >:(((((", "yo mama", "roflcopter", "no", "stop", "die", "i am going to cry" ];
 			return interaction.respond(fail[Math.floor(Math.random() * fail.length)], { ephemeral: true });
 		}
@@ -65,7 +65,7 @@ export default new GlobalCommand({
 			await interaction.respond(`ok sp**on. set more properties for ${tempStorage.addItem.itemName}`);
 
 			await interaction.respond("give me a 10 character item id. this is basically shorthand for the name, it's used for storage and isnt revealed to the end user. dont put a space though. (you have 60 seconds to respond)");
-			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author.id, { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author?.id, { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`id\` to \`${collected.last()?.content}\``)
 					tempStorage.id = collected.last()?.content;
@@ -74,7 +74,7 @@ export default new GlobalCommand({
 			if (!tempStorage.id) return;
 
 			await interaction.respond("next is description. give a sentence or two explaining the item. obviously, it will be revealed to the end user. you get 60 seconds again.");
-			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author.id, { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author?.id, { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`description\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.description = collected.last()?.content;
@@ -83,7 +83,7 @@ export default new GlobalCommand({
 			if (!tempStorage.addItem.description) return;
 
 			await interaction.respond("how much does the item cost? give me a valid number equal to or greater than 1 or you will ruin every command that uses this item. 1 minute instead of 60 seconds this time, starting now.");
-			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author.id, { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author?.id, { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`cost\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.cost = collected.last()?.content;
@@ -92,7 +92,7 @@ export default new GlobalCommand({
 			if (!tempStorage.addItem.cost) return;
 
 			await interaction.respond("should the item be shown in users' inventory?!?!?! only say yes if this item should be a heist powerup or vanity thing like plasmablade (more item functionality coming soon), respond with 'true' or 'false' within a minute.");
-			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author.id, { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => m.author.id === interaction.author?.id, { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`invShow\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.invShow = collected.last()?.content;
@@ -103,7 +103,7 @@ export default new GlobalCommand({
 			await interaction.respond("next properties are optional. if you dont want to set one, respond with 'none' or wait for time to expire");
 
 			await interaction.respond("set the required items if this is a crafted item. separate item names by spaces (if the item name has a space, leave it out and let juh know)");
-			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author?.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`requiredItems\` to \`${collected.last()?.content}\``);
 					const requiredItems: string[] = [];
@@ -113,7 +113,7 @@ export default new GlobalCommand({
 				.catch(async () => await interaction.respond("you took too long or said `none`. property has not been set"));
 
 			await interaction.respond("what should Vagan say when the user buys the item? obviously maximum is 2000 characters but why would you do that");
-			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author?.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`gainMessage\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.gainMessage = collected.last()?.content;
@@ -121,7 +121,7 @@ export default new GlobalCommand({
 				.catch(async () => await interaction.respond("you took too long or said `none`. property has not been set"));
 
 			await interaction.respond("what role should users get when they buy the item? send a role ID (not the name, not a ping, but the id) or the bot will go nuts");
-			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author?.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`roleGain\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.roleGain = collected.last()?.content;
@@ -129,7 +129,7 @@ export default new GlobalCommand({
 				.catch(async () => await interaction.respond("you took too long or said `none`. property has not been set"));
 
 			await interaction.respond("if this is a heist powerup, should it give a payout boost? for example, if you send `1.5`, using this item in a heist will give/take 50% more money.");
-			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author?.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`payout\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.payout = collected.last()?.content;
@@ -137,7 +137,7 @@ export default new GlobalCommand({
 				.catch(async () => await interaction.respond("you took too long or said `none`. property has not been set"));
 
 			await interaction.respond("if this is a heist powerup, should it give a higher chance of winning? this will be subtracted from the crime fail rate of 45%. for example, if you send `10`, the chance of losing will be 35% when used in a heist.");
-			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
+			interaction.channel.awaitMessages((m: Message) => (m.author.id === interaction.author?.id) || (m.content.toLowerCase() !== "none"), { max: 1, time: 60000, errors: [ "time" ] })
 				.then(async (collected) => {
 					await interaction.respond(`setting \`payout\` to \`${collected.last()?.content}\``);
 					tempStorage.addItem.payout = collected.last()?.content;
@@ -150,8 +150,8 @@ export default new GlobalCommand({
 						throw new Error("Item already exists");
 					} else {
 						await blackMarket.items.set(tempStorage.id, { id: tempStorage.id, ...tempStorage.addItem });
-						await Vagan.hideout.logChannel.send(`${interaction.author.tag} created item "${tempStorage.addItem.name}":`);
-						Vagan.emit("debug", `${interaction.author.tag} created item "${tempStorage.addItem.name}":`);
+						await Vagan.hideout.logChannel.send(`${interaction.author?.tag} created item "${tempStorage.addItem.name}":`);
+						Vagan.emit("debug", `${interaction.author?.tag} created item "${tempStorage.addItem.name}":`);
 						const embed = new MessageEmbed();
 						for (const key in tempStorage.addItem) {
 							embed.addField(key, tempStorage.addItem[key]);
@@ -162,8 +162,8 @@ export default new GlobalCommand({
 				})();
 			} catch (err) {
 				Vagan.handleError(err, interaction);
-				await Vagan.hideout.logChannel.send(`${interaction.author.tag} tried to create item "${tempStorage.addItem.name}":`);
-				Vagan.emit("debug", `${interaction.author.tag} tried to create item "${tempStorage.addItem.name}":`);
+				await Vagan.hideout.logChannel.send(`${interaction.author?.tag} tried to create item "${tempStorage.addItem.name}":`);
+				Vagan.emit("debug", `${interaction.author?.tag} tried to create item "${tempStorage.addItem.name}":`);
 				const embed = new MessageEmbed();
 				for (const key in tempStorage.addItem) {
 					embed.addField(key, tempStorage.addItem[key]);
@@ -181,14 +181,14 @@ export default new GlobalCommand({
 		}
 
 		const sendMe = new Array();
-		sendMe.push(`${interaction.author.tag} used root function \`${tempStorage.func}\``);
+		sendMe.push(`${interaction.author?.tag} used root function \`${tempStorage.func}\``);
 		if (tempStorage.arg0) {
 			sendMe.push(`Arg0: ${tempStorage.arg0}`);
 		}
 		await Vagan.hideout.logChannel.send(sendMe.join("\n"));
 		
 		if (tempStorage.func === "reboot") {
-			restart("all", () => console.log(`Vagan restarted by ${interaction.author.tag}`));
+			restart("all", () => console.log(`Vagan restarted by ${interaction.author?.tag}`));
 		}
 	},
 });

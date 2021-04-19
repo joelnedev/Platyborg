@@ -13,19 +13,19 @@ export default class Client {
         this.Vagan = Vagan;
     }
     get commands() {
-        const folder = readdirSync("../../../commands");
+        const folder = readdirSync("../../commands");
         const commands = new Map();
         for (const file of folder) {
-            const command = require(`../../../command/${file}`);
+            const command = require(`../../command/${file}`);
             commands.set(command.name, command);
         }
         return commands;
     }
     ;
     findCommand(commandName) {
-        const folder = readdirSync("../../../commands");
+        const folder = readdirSync("../../commands");
         for (const file of folder) {
-            const command = require(`../../../commands/${file}`);
+            const command = require(`../../commands/${file}`);
             return command.name == commandName ? command : undefined;
         }
     }

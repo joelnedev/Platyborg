@@ -136,15 +136,12 @@ Vagan.on("messageReactionAdd", async reaction => {
 });
 
 
-// @ts-expect-error This code block runs every time one of Vagan's slash commands is used, and passes the request object for usage inside the callback script.
-Vagan.ws.on("INTERACTION_CREATE", async (request: any) => {
-
-	// Constructs an interaction object based on the api request received from WebSocket.
-	const interaction = new Interaction(Vagan, request);
+// This code block runs every time one of Vagan's slash commands is used, and passes the request object for usage inside the callback script.
+Vagan.on("interactionCreate", async interaction => {
 
 	// This will run different functions based on the command executed. If something goes wrong, it lets the user and I know.
 	try {
-		client.matchCommand(interaction);
+		
 	} catch (error) {
 		Vagan.handleError(error, interaction);
 	}
@@ -154,10 +151,10 @@ Vagan.ws.on("INTERACTION_CREATE", async (request: any) => {
 Vagan.on("message", async message => {
 
 	// This line sends "egis" if someone says egis outside of the #egis channel. To prevent loopholes, it ignores itself.
-	(message.content.toLowerCase().includes("egis") && message.channel.id !== "712991588376117308" && message.author.id !== Vagan.user?.id) ? await message.channel.send("egis") : '';
+	if (message.content.toLowerCase().includes("egis") && message.channel.id !== "712991588376117308" && message.author.id !== Vagan.user?.id) await message.channel.send("egis");
 
 	// Sends a random ping message if someone pings Vagan
-	(message.content.match(new RegExp(`<@!?${Vagan.user?.id}> `))) ? await message.channel.send(Vagan.config.replies.ping[Math.floor(Math.random() * Vagan.config.replies.ping.length)]) : '';
+	if (message.content.match(new RegExp(`<@!?${Vagan.user?.id}> `))) await message.channel.send(Vagan.config.replies.ping[Math.floor(Math.random() * Vagan.config.replies.ping.length)]);
 });
 
 // -- End of event callbacks --

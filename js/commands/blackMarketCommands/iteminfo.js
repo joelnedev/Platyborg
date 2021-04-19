@@ -16,7 +16,7 @@ export default {
             if (!item)
                 return interaction.respond("I couldn't find that item.", { ephemeral: true });
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setColor("#03b1fc")
                 .setTitle(`Info for ${item.name}`)
                 .setDescription(`${item.description}`)

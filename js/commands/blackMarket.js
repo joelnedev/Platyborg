@@ -100,6 +100,18 @@ export default new GlobalCommand({
                     type: 1
                 },
                 {
+                    name: "shop",
+                    description: "Show all items available to buy",
+                    type: 1,
+                    options: [
+                        {
+                            name: "page",
+                            description: "Page number to jump to (default is page 1)",
+                            type: 4
+                        }
+                    ]
+                },
+                {
                     name: "item",
                     description: "Show information on an item",
                     type: 1,
@@ -207,6 +219,7 @@ export default new GlobalCommand({
         }
     ],
     execute(interaction) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v;
         return __awaiter(this, void 0, void 0, function* () {
             const Vagan = interaction.bot;
             const command = {
@@ -215,7 +228,8 @@ export default new GlobalCommand({
                         const Replies = [];
                         replies.forEach((reply) => {
                             const emoji = (id) => { return Vagan.emojis.cache.get(id); };
-                            const emojis = [emoji("817125266593808435"), emoji("817125375699845171"), emoji("817125438110826547"), emoji("817125529555697735")];
+                            const emojis = [];
+                            ["817125266593808435", "817125375699845171", "817125438110826547", "817125529555697735"].forEach(emojiID => emojis.push(emoji(emojiID)));
                             Replies.push(reply.replace("{amount}", `${emojis[Math.floor(Math.random() * emojis.length)]}${amount}`));
                         });
                         return Replies;
@@ -228,52 +242,43 @@ export default new GlobalCommand({
                 },
                 args: {}
             };
-            const subcommand = interaction.args[0].options[0];
-            switch (subcommand.name) {
+            const subcommand = (_a = interaction.args[0].options) === null || _a === void 0 ? void 0 : _a[0];
+            command.name = subcommand === null || subcommand === void 0 ? void 0 : subcommand.name;
+            switch (subcommand === null || subcommand === void 0 ? void 0 : subcommand.name) {
                 case "rob":
-                    command.name = "rob";
-                    command.args.target = yield Vagan.users.fetch(subcommand.options[0].value.id);
+                    command.args.target = yield Vagan.users.fetch((_b = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _b === void 0 ? void 0 : _b[0].value);
                     break;
                 case "give":
-                    command.name = "give";
-                    command.args.target = yield Vagan.users.fetch(subcommand.options[0].value.id);
-                    command.args.amount = subcommand.options[0].value;
+                    command.args.target = yield Vagan.users.fetch((_c = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _c === void 0 ? void 0 : _c[0].value);
+                    command.args.amount = (_d = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _d === void 0 ? void 0 : _d[0].value;
                     break;
                 case "balance":
-                    command.name = "balance";
-                    command.args.target = (subcommand.options[0].value ? yield Vagan.users.fetch(subcommand.options[0].value.id) : interaction.author);
+                    command.args.target = (((_e = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _e === void 0 ? void 0 : _e[0].value) ? yield Vagan.users.fetch((_f = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _f === void 0 ? void 0 : _f[0].value) : interaction.author?);
                     break;
                 case "item":
-                    command.name = "iteminfo";
-                    command.args.target = subcommand.options[0].value;
+                    command.args.target = (_g = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _g === void 0 ? void 0 : _g[0].value;
                     break;
                 case "blackjack":
-                    command.name = "blackjack";
-                    command.args.bet = subcommand.options.find((arg) => arg.name === "bet").value;
+                    command.args.bet = (_j = (_h = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _h === void 0 ? void 0 : _h.find((arg) => arg.name === "bet")) === null || _j === void 0 ? void 0 : _j.value;
                     break;
                 case "chickenfight":
-                    command.name = "chickenfight";
-                    command.args.bet = subcommand.options[0].value;
+                    command.args.bet = (_k = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _k === void 0 ? void 0 : _k[0].value;
+                    break;
+                case "shop":
+                    command.args.page = (_l = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _l === void 0 ? void 0 : _l[0].value;
                     break;
                 case "buy":
-                    command.name = "buy";
-                    command.args.item = subcommand.options[0].value;
+                    command.args.item = (_m = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _m === void 0 ? void 0 : _m[0].value;
                     break;
                 case "sell":
-                    command.name = "sell";
-                    command.args.item = subcommand.options.find((arg) => arg.name === "item").value;
-                    if (subcommand.options.find((arg) => arg.name === "user").value) {
-                        const user = Vagan.users.fetch(subcommand.options[0].value.id);
-                        command.args.target = yield user;
+                    command.args.item = (_p = (_o = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _o === void 0 ? void 0 : _o.find((arg) => arg.name === "item")) === null || _p === void 0 ? void 0 : _p.value;
+                    if ((_r = (_q = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _q === void 0 ? void 0 : _q.find((arg) => arg.name === "user")) === null || _r === void 0 ? void 0 : _r.value) {
+                        command.args.target = yield Vagan.users.fetch((_s = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _s === void 0 ? void 0 : _s[0].value);
                     }
                     break;
                 case "trade":
-                    command.name = "trade";
-                    command.args.item = subcommand.options.find((arg) => arg.name === "item").value;
-                    command.args.target = yield Vagan.users.fetch(subcommand.options[0].value.id);
-                    break;
-                default:
-                    command.name = subcommand.name;
+                    command.args.item = (_u = (_t = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _t === void 0 ? void 0 : _t.find((arg) => arg.name === "item")) === null || _u === void 0 ? void 0 : _u.value;
+                    command.args.target = yield Vagan.users.fetch((_v = subcommand === null || subcommand === void 0 ? void 0 : subcommand.options) === null || _v === void 0 ? void 0 : _v[0].value);
                     break;
             }
             try {

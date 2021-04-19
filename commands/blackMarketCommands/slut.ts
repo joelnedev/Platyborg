@@ -14,10 +14,10 @@ export default {
 		const failReplies: string[] = command.tools.replaceReplies(Vagan.config.replies.slut.fail, remove);
 
 		// Modify their balance based on if they fail or not, then send an embed with a random message containing their balance
-		failed > 0.5 ? await blackMarket.add(interaction.author.id, add) : await blackMarket.subtract(interaction.author.id, remove);
+		failed > 0.5 ? await blackMarket.add(interaction.author?.id, add) : await blackMarket.subtract(interaction.author?.id, remove);
 
 		const embed = new MessageEmbed()
-			.setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+			.setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
 			.setDescription(failed > 0.5 ? winReplies[Math.floor(Math.random() * winReplies.length)] : failReplies[Math.floor(Math.random() * failReplies.length)])
 			.setColor(failed > 0.5 ? "00FF00" : "FF0000");
 

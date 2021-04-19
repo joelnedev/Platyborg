@@ -4,12 +4,12 @@ export default {
 	async execute(interaction: Interaction, command: any) {
 
 		// Set variables
-		const user = await blackMarket.users.get(interaction.author.id);
+		const user = await blackMarket.users.get(interaction.author?.id);
 		const target = await blackMarket.users.get(command.args.target?.id);
 		const item = await blackMarket.items.find("name", command.args.item);
 		const targetItem: any = {};
 		const errorEmbed = new MessageEmbed()
-			.setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+			.setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
 			.setColor("FF0000");
 
 		interaction.respond("What item would you like in return?");
@@ -25,7 +25,7 @@ export default {
 		} else if (!target.items.includes(targetItem.h.id)) {
 			errorEmbed.setDescription("The user you're trying to sell to doesn't have the item you're looking for.");
 		} else {
-			await command.args.target.send(`${interaction.author.tag} wants to trade you ${item.name} for ${targetItem.h.name}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
+			await command.args.target.send(`${interaction.author?.tag} wants to trade you ${item.name} for ${targetItem.h.name}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
 			command.args.target.DMchannel.awaitMessages((m: Message) => (m.author.id === command.args.target.id) && (m.content.toLowerCase() === ("yes" || "no" || "y" || "n")), { max: 1, time: 30000, errors: [ "time" ] })
 				.then(async (collected: Collection<Snowflake, Message>) => {
 					const m = collected.last();

@@ -13,12 +13,12 @@ export default {
     execute(interaction, command) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield blackMarket.users.get(interaction.author.id);
+            const user = yield blackMarket.users.get(interaction.author?.id);
             const target = yield blackMarket.users.get((_a = command.args.target) === null || _a === void 0 ? void 0 : _a.id);
             const item = yield blackMarket.items.find("name", command.args.item);
             const targetItem = {};
             const errorEmbed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setColor("FF0000");
             interaction.respond("What item would you like in return?");
             interaction.channel.awaitMessages((m) => (m.author.id === command.args.target.id), { max: 1, time: 30000, errors: ["time"] })
@@ -36,7 +36,7 @@ export default {
                 errorEmbed.setDescription("The user you're trying to sell to doesn't have the item you're looking for.");
             }
             else {
-                yield command.args.target.send(`${interaction.author.tag} wants to trade you ${item.name} for ${targetItem.h.name}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
+                yield command.args.target.send(`${interaction.author?.tag} wants to trade you ${item.name} for ${targetItem.h.name}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
                 command.args.target.DMchannel.awaitMessages((m) => (m.author.id === command.args.target.id) && (m.content.toLowerCase() === ("yes" || "no" || "y" || "n")), { max: 1, time: 30000, errors: ["time"] })
                     .then((collected) => __awaiter(this, void 0, void 0, function* () {
                     const m = collected.last();

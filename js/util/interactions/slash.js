@@ -1,5 +1,5 @@
-import Client from './client.js';
-import GlobalCommand from './global-command.js';
-import GuildCommand from './guild-command.js';
-import Interaction from './interaction.js';
+import Client from './client';
+import GlobalCommand from './global-command';
+import GuildCommand from './guild-command';
+import Interaction from './interaction';
 export { Client, GlobalCommand, GuildCommand, Interaction };

@@ -23,7 +23,7 @@ export default new GlobalCommand({
 			.addField("Round-trip latency", `${ping}ms`, true)
 			.addField("WebSocket heartbeat", `${Vagan.ws.ping}ms`, true)
 			.addField("Hosting", "Heroku Hobby Dyno via GitHub Student Developer Pack")
-			.addField("Rows of data in Black Market database", `${await blackMarket.users.size + await blackMarket.items.size + await blackMarket.roles.size}`)
+			.addField("Rows of data in Black Market databases", `${await blackMarket.users.size + await blackMarket.items.size + await blackMarket.roles.size}`)
 			.addField("Profile Picture", "Created by amazing artist <@!615720739328491526>");
 		const options = { embed, ephemeral: false };
 		options.ephemeral = interaction.args.find(arg => arg.name === "public")?.value;

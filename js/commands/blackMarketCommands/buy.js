@@ -14,9 +14,9 @@ export default {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const item = yield blackMarket.items.find("name", command.args.target);
-            const user = yield blackMarket.users.get(interaction.author.id);
+            const user = yield blackMarket.users.get(interaction.author?.id);
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL());
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL());
             if (!item) {
                 embed.setDescription("I couldn't find that item.");
                 embed.setColor("#FF0000");
@@ -33,9 +33,9 @@ export default {
             }
             else if (item.invShow) {
                 yield blackMarket.users.push("items", item.id, false);
-                yield blackMarket.subtract(interaction.author.id, item.cost);
+                yield blackMarket.subtract(interaction.author?.id, item.cost);
                 if (item.requiredItems) {
-                    item.requiredItems.forEach((Item) => __awaiter(this, void 0, void 0, function* () { return yield blackMarket.users.remove(`${interaction.author.id}.items`, Item); }));
+                    item.requiredItems.forEach((Item) => __awaiter(this, void 0, void 0, function* () { return yield blackMarket.users.remove(`${interaction.author?.id}.items`, Item); }));
                 }
                 embed.setColor("00FF00");
                 embed.setDescription(item.gainMessage ? item.gainMessage : `You now have ${item.name}. Thanks for the business.`);
@@ -44,7 +44,7 @@ export default {
                 embed.setColor("00FF00");
                 embed.setDescription(item.gainMessage ? item.gainMessage : `You now have ${item.name}. Thanks for the business.`);
                 if (item.roleGain) {
-                    interaction.member.roles.add(item.roleGain);
+                    interaction.member?.roles.add(item.roleGain);
                 }
             }
             interaction.respond(undefined, { embed });

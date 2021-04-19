@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { InteractionResponseFlags } from "./types.js";
+import { InteractionResponseFlags } from "./types";
 export default class Interaction {
     constructor(bot, request) {
         var _a;

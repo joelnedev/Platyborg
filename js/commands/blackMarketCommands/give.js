@@ -12,12 +12,12 @@ import { MessageEmbed } from "discord.js";
 export default {
     execute(interaction, command) {
         return __awaiter(this, void 0, void 0, function* () {
-            const currentAmount = (yield blackMarket.users.get(`${interaction.author.id}`)).cash;
+            const currentAmount = (yield blackMarket.users.get(`${interaction.author?.id}`)).cash;
             const transferAmount = command.args.amount;
             const transferTarget = interaction.bot.users.cache.get(command.args.target);
             if (transferAmount > currentAmount) {
                 return interaction.respond(undefined, { embed: new MessageEmbed()
-                        .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                        .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                         .setColor("#FF0000")
                         .setTitle("Invalid amount 🚨")
                         .setDescription(interaction.bot.config.replies.error[Math.floor(Math.random() * interaction.bot.config.replies.error.length)])
@@ -25,19 +25,19 @@ export default {
             }
             if (transferAmount <= 0) {
                 return interaction.respond(undefined, { embed: new MessageEmbed()
-                        .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                        .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                         .setColor("#FF0000")
                         .setTitle("Invalid amount 🚨")
                         .setDescription(interaction.bot.config.replies.error[Math.floor(Math.random() * interaction.bot.config.replies.error.length)])
                         .addField("Error", "You can't transfer a negative amount of money.") });
             }
-            yield blackMarket.subtract(interaction.author.id, transferAmount);
+            yield blackMarket.subtract(interaction.author?.id, transferAmount);
             yield blackMarket.add(transferTarget.id, transferAmount);
             interaction.respond(undefined, { embed: new MessageEmbed()
-                    .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                    .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                     .setColor("#00FF00")
                     .setTitle("Transfer successful")
-                    .setDescription(`Successfully transferred ${transferAmount} to ${transferTarget}. Your current balance is ${(yield blackMarket.users.get(interaction.author.id)).cash}`) });
+                    .setDescription(`Successfully transferred ${transferAmount} to ${transferTarget}. Your current balance is ${(yield blackMarket.users.get(interaction.author?.id)).cash}`) });
         });
     }
 };

@@ -31,7 +31,7 @@ export default new GlobalCommand({
             const anonSay = () => __awaiter(this, void 0, void 0, function* () {
                 yield interaction.respond("ok", { ephemeral: true });
                 yield interaction.channel.send(content);
-                interaction.bot.channels.cache.get("688757903905259580").send(`${interaction.author.tag} said: \n \`${content}\``);
+                interaction.bot.channels.cache.get("688757903905259580").send(`${interaction.author?.tag} said: \n \`${content}\``);
             });
             interaction.args.find(arg => arg.name === "anonymous").value === false ? yield interaction.respond(content, { stripMentions: true }) : anonSay();
         });

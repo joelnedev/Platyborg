@@ -12,9 +12,9 @@ import { MessageEmbed } from "discord.js";
 export default {
     execute(interaction, command) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield blackMarket.users.get(interaction.author.id);
+            const user = yield blackMarket.users.get(interaction.author?.id);
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setColor("#03b1fc");
             if (!user.items.length)
                 return interaction.respond(undefined, { embed: embed.setDescription("You don't have anything in your inventory.") });

@@ -21,7 +21,7 @@ export default new GlobalCommand({
 		const anonSay: () => void = async () => {
 			await interaction.respond("ok", { ephemeral: true });
 			await interaction.channel.send(content); // @ts-expect-error
-			interaction.bot.channels.cache.get("688757903905259580").send(`${interaction.author.tag} said: \n \`${content}\``);
+			interaction.bot.channels.cache.get("688757903905259580").send(`${interaction.author?.tag} said: \n \`${content}\``);
 		}
 
 		interaction.args.find(arg => arg.name === "anonymous").value === false ? await interaction.respond(content, { stripMentions: true }) : anonSay();

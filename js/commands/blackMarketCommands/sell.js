@@ -13,11 +13,11 @@ export default {
     execute(interaction, command) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield blackMarket.users.get(interaction.author.id);
+            const user = yield blackMarket.users.get(interaction.author?.id);
             const target = yield blackMarket.users.get((_a = command.args.target) === null || _a === void 0 ? void 0 : _a.id);
             const item = yield blackMarket.items.find("name", command.args.item);
             const errorEmbed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setColor("FF0000");
             if (!item) {
                 errorEmbed.setDescription("That item doesn't exist.");
@@ -29,7 +29,7 @@ export default {
                 errorEmbed.setDescription("The user you're trying to sell to doesn't have enough money. Remember to withdraw — you can't do anything with money in your bank!");
             }
             else if (target) {
-                yield command.args.target.send(`${interaction.author.tag} wants to sell ${item.name} to you for ${item.cost}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
+                yield command.args.target.send(`${interaction.author?.tag} wants to sell ${item.name} to you for ${item.cost}. Do you accept the transaction? Respond with yes or no within 30 seconds.`);
                 command.args.target.DMchannel.awaitMessages((m) => (m.author.id === command.args.target.id) && (m.content.toLowerCase() === ("yes" || "no" || "y" || "n")), { max: 1, time: 30000, errors: ["time"] })
                     .then((collected) => __awaiter(this, void 0, void 0, function* () {
                     const m = collected.last();
@@ -40,7 +40,7 @@ export default {
                             interaction.respond(`${m === null || m === void 0 ? void 0 : m.author.tag} has accepted the transaction. One moment...`);
                             user.items.splice(user.items.findIndex((Item) => Item === item.id), 1);
                             target.items.push(item.id);
-                            yield blackMarket.add(interaction.author.id, item.cost);
+                            yield blackMarket.add(interaction.author?.id, item.cost);
                             yield blackMarket.subtract(m === null || m === void 0 ? void 0 : m.author.id, item.cost);
                             interaction.respond("All done.");
                             break;
@@ -58,7 +58,7 @@ export default {
             }
             else {
                 yield interaction.respond(`I'll give you ${item.cost} for that. Sound good?`);
-                interaction.channel.awaitMessages((m) => (m.author.id === interaction.author.id) && (m.content.toLowerCase() === ("yes" || "no" || "y" || "n")), { max: 1, time: 30000, errors: ["time"] })
+                interaction.channel.awaitMessages((m) => (m.author.id === interaction.author?.id) && (m.content.toLowerCase() === ("yes" || "no" || "y" || "n")), { max: 1, time: 30000, errors: ["time"] })
                     .then((collected) => __awaiter(this, void 0, void 0, function* () {
                     var _b;
                     switch ((_b = collected.last()) === null || _b === void 0 ? void 0 : _b.content.toLowerCase()) {
@@ -66,7 +66,7 @@ export default {
                         case "y":
                             interaction.respond("One moment...");
                             user.items.splice(user.items.findIndex((Item) => Item === item.id), 1);
-                            yield blackMarket.add(interaction.author.id, item.cost);
+                            yield blackMarket.add(interaction.author?.id, item.cost);
                             interaction.respond("Thanks for the business.");
                             break;
                         case "no":

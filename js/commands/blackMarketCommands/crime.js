@@ -16,13 +16,13 @@ export default {
             const config = Vagan.config.economy.crime;
             const fail = () => Math.random() * config.failRate;
             const failed = fail();
-            const add = command.randomNumber(config.win.min, config.win.max);
-            const remove = command.randomNumber(config.fail.min, config.fail.max);
-            const winReplies = command.replaceReplies(Vagan.config.replies.crime.win, add);
-            const failReplies = command.replaceReplies(Vagan.config.replies.crime.fail, remove);
-            failed > 0.5 ? yield blackMarket.add(interaction.author.id, add) : yield blackMarket.subtract(interaction.author.id, remove);
+            const add = command.tools.randomNumber(config.win.min, config.win.max);
+            const remove = command.tools.randomNumber(config.fail.min, config.fail.max);
+            const winReplies = command.tools.replaceReplies(Vagan.config.replies.crime.win, add);
+            const failReplies = command.tools.replaceReplies(Vagan.config.replies.crime.fail, remove);
+            failed > 0.5 ? yield blackMarket.add(interaction.author?.id, add) : yield blackMarket.subtract(interaction.author?.id, remove);
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setDescription(failed > 0.5 ? winReplies[Math.floor(Math.random() * winReplies.length)] : failReplies[Math.floor(Math.random() * failReplies.length)])
                 .setColor(failed > 0.5 ? "00FF00" : "FF0000");
             interaction.respond(undefined, { embed });

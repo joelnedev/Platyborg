@@ -60,21 +60,15 @@ export default new GlobalCommand({
 	async execute(interaction: Interaction) {
 
 		// Set variables
-		const values = {
-			s: "Killer Bean Club",
-			sb: "Shadow Bean",
-			cc: "Content Creator"
-		};
-		let value: string|Snowflake = interaction.args[0].options?.[0]?.value;
-		let name
+		const value: string|Snowflake = interaction.args[0].options?.[0]?.value;
 		const resolved = interaction.request.data?.resolved?.users[value];
-		name = resolved ? `${resolved.username}#${resolved.discriminator}` : undefined;
+		const name = resolved ? `${resolved.username}#${resolved.discriminator}` : undefined;
 
 		// Initialize embed
 		const embed = new MessageEmbed()
-			.setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+			.setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
 			.setColor("#03b1fc")
-			.setTitle(`Info for ${name ? name : values[value]}`);
+			.setTitle(`Info for ${name ? name : value}`);
 
 		// Set description
 		switch (value) {

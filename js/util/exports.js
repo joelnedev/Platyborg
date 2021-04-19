@@ -1,3 +1,3 @@
-import { Client, GlobalCommand, GuildCommand, Interaction } from "./interactions/slash.js";
-import { blackMarket } from "./misc/blackMarket.js";
+import { Client, GlobalCommand, GuildCommand, Interaction } from "./interactions/slash";
+import { blackMarket } from "./misc/blackMarket";
 export { blackMarket, Client, GlobalCommand, GuildCommand, Interaction };

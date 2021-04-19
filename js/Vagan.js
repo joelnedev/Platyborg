@@ -7,14 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { blackMarket/* , Client, Interaction */ } from "./util/exports.js";
+import { blackMarket, Client, Interaction } from "./util/exports.js";
 import { Client as discordClient, MessageEmbed, } from "discord.js";
-const Vagan = new discordClient({ intents: [ "GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"], partials: ["MESSAGE", "USER", "REACTION"] });
+const Vagan = new discordClient({ intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_EMOJIS", "GUILD_WEBHOOKS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"], partials: ["MESSAGE", "USER", "REACTION"] });
 import config from "./util/info/config.js";
 Vagan.config = config;
-// const client = new Client(Vagan);
+const client = new Client(Vagan);
 Vagan.showcaseCooldown = new Set;
-let availableGuilds = 0;
 (() => __awaiter(void 0, void 0, void 0, function* () {
     yield blackMarket.users.defer.then(() => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Connected, there are ${yield blackMarket.users.size} rows in the users database.`);
@@ -28,17 +27,10 @@ let availableGuilds = 0;
 }))();
 Vagan.on("debug", console.log);
 Vagan.once("ready", () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     (_a = Vagan.user) === null || _a === void 0 ? void 0 : _a.setActivity("Not responding to commands, currently in debug mode");
     console.log("I'm in.");
-    // client.postCommands();
-    blackMarket.add("268138992606773248", "5000", "bank").then(user => console.log(user.bank));
-}));
-Vagan.on("guildCreate", () => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    availableGuilds++;
-    if (availableGuilds != 2)
-        return;
+    client.postCommands();
     Vagan.KBC = yield Vagan.guilds.fetch("677965121116700723");
     Vagan.hideout = yield Vagan.guilds.fetch("794303785572237322");
     Vagan.hideout.godModeUsers = (_b = (yield Vagan.hideout.roles.fetch("797151488493223986"))) === null || _b === void 0 ? void 0 : _b.members.array().map(member => member.id);
@@ -48,7 +40,7 @@ Vagan.on("guildCreate", () => __awaiter(void 0, void 0, void 0, function* () {
         const embed = new MessageEmbed()
             .setTitle("Error 🚨")
             .setColor("#ff0000")
-            .setAuthor(interaction ? interaction === null || interaction === void 0 ? void 0 : interaction.member.displayName : "undefined", interaction ? interaction === null || interaction === void 0 ? void 0 : interaction.author.displayAvatarURL() : '')
+            .setAuthor(interaction ? interaction === null || interaction === void 0 ? void 0 : interaction.member?.displayName : "undefined", interaction ? interaction === null || interaction === void 0 ? void 0 : interaction.author?.displayAvatarURL() : '')
             .addField("Error", "An error has occurred.");
         yield (interaction === null || interaction === void 0 ? void 0 : interaction.respond(undefined, { embed: embed
                 .setDescription(Vagan.config.replies.error[Math.floor(Math.random() * Vagan.config.replies.error.length)])

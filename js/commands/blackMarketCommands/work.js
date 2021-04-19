@@ -14,11 +14,11 @@ export default {
         return __awaiter(this, void 0, void 0, function* () {
             const Vagan = interaction.bot;
             const config = Vagan.config.economy.work;
-            const add = command.randomNumber(config.win.min, config.win.max);
-            const replies = command.replaceReplies(Vagan.config.replies.work, add);
-            yield blackMarket.users.math(`${interaction.author.id}.cash`, "add", add);
+            const add = command.tools.randomNumber(config.win.min, config.win.max);
+            const replies = command.tools.replaceReplies(Vagan.config.replies.work, add);
+            yield blackMarket.users.math(`${interaction.author?.id}.cash`, "add", add);
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setDescription(replies[Math.floor(Math.random() * replies.length)])
                 .setColor("#00FF00");
             interaction.respond(undefined, { embed });

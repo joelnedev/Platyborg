@@ -14,19 +14,19 @@ export default {
         return __awaiter(this, void 0, void 0, function* () {
             const Vagan = interaction.bot;
             const config = Vagan.config.economy.crime;
-            const user = yield blackMarket.users.get(interaction.author.id);
+            const user = yield blackMarket.users.get(interaction.author?.id);
             const target = yield blackMarket.users.get(command.args.target);
             const fail = () => (Math.random() * ((user.bank + user.cash) / (target.cash + (user.bank + user.cash))));
             const failed = fail();
-            const add = command.randomNumber(config.win.min, config.win.max);
-            const remove = command.randomNumber(config.fail.min, config.fail.max);
-            const winReplies = command.replaceReplies(Vagan.config.replies.rob.win, add);
-            const failReplies = command.replaceReplies(Vagan.config.replies.rob.fail, remove);
-            failed > 0.5 ? yield blackMarket.add(interaction.author.id, add) : yield blackMarket.subtract(interaction.author.id, remove);
+            const add = command.tools.randomNumber(config.win.min, config.win.max);
+            const remove = command.tools.randomNumber(config.fail.min, config.fail.max);
+            const winReplies = command.tools.replaceReplies(Vagan.config.replies.rob.win, add);
+            const failReplies = command.tools.replaceReplies(Vagan.config.replies.rob.fail, remove);
+            failed > 0.5 ? yield blackMarket.add(interaction.author?.id, add) : yield blackMarket.subtract(interaction.author?.id, remove);
             if (failed > 0.5)
                 yield blackMarket.subtract(command.target.id, add, "bank");
             const embed = new MessageEmbed()
-                .setAuthor(interaction.member.displayName, interaction.author.displayAvatarURL())
+                .setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
                 .setDescription(failed > 0.5 ? winReplies[Math.floor(Math.random() * winReplies.length)] : failReplies[Math.floor(Math.random() * failReplies.length)])
                 .setColor(failed > 0.5 ? "00FF00" : "FF0000");
             interaction.respond(undefined, { embed });
