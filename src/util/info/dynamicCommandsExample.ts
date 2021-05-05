@@ -1,3 +1,4 @@
+// @ts-nocheck
 // This file is to explain how the dynamic command modules work as well as to provide skeleton code for me and contributers to copy/paste into new command files (not everything in programming is just rapid typing)
 
 // This line gets classes from da-slash and calls them via their names.
@@ -18,18 +19,10 @@ export default new GlobalCommand({
 			"name": "name of choice 2",
 			"value": "value of choice 2"
 		}]
-	}], // Options the user is given. These can be really, really confusing so go check out https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption and
-		// https://discord.com/developers/docs/interactions/slash-commands#subcommands-and-subcommand-groups as it explains it better than I can.
+	}], /* Options the user is given. These can be really, really confusing so go check out https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption and
+		   https://discord.com/developers/docs/interactions/slash-commands#subcommands-and-subcommand-groups as it explains it better than I can. */
 	execute(interaction: Interaction) {
 		// Code to be executed when the command is run goes here.
-
-		// Change the InteractionResponseType if needed.
-		/* Reference:
-		1: ACK a `Ping` (Don't worry about this type, Vagan doesn't need it.)
-		4: Send message immediately (Note: this is the default response type; if you want to use it, you don't need to declare it.)
-		5: Don't send message yet
-		*/
-		interaction.responseType = 5;
 	},
 });
 

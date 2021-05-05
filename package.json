@@ -2,7 +2,7 @@
   "name": "vagan",
   "version": "3.0.0",
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
-  "main": "js/Vagan.js",
+  "main": "dist/Vagan.js",
   "engines": {
     "node": "^14.15.1",
     "npm": "^7.5.3"
@@ -10,10 +10,10 @@
   "type": "module",
   "scripts": {
     "test": "node -r dotenv/config --trace-warnings .",
-    "start": "pm2-runtime start ecosystem.config.js",
+    "start": "pm2 start dist/Vagan.js && hexo server",
     "stop": "pm2 stop all",
     "compile": "tsc --project tsconfig.json",
-    "reset": "sudo rm -rf js/ && mkdir js"
+    "reset": "sudo rm -rf dist/ && mkdir dist"
   },
   "repository": {
     "type": "git",
@@ -30,14 +30,13 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JuhJuhButts/Vagan/issues",
-    "email": "evansjoe002@icloud.com"
+    "email": "joel@joelne.tech"
   },
   "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
   "dependencies": {
     "@joshdb/core": "^1.1.5",
     "@joshdb/mongo": "^1.1.3",
-    "@joshdb/sqlite": "^1.1.7",
-    "discord.js": "https://github.com/discordjs/discord.js.git",
+    "discord.js": "github:discordjs/discord.js#69dfce33a972305aa0d1b807ce92b75b9129c32a",
     "pm2": "^4.5.5"
   },
   "devDependencies": {
