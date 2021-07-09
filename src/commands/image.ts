@@ -1,7 +1,17 @@
-import { GlobalCommand, Interaction } from "../util/exports.js";
-import { MessageEmbed } from "discord.js";
+import { Vagan } from "../util/exports.js";
+import { CommandInteraction, CommandInteractionOption, MessageEmbed } from "discord.js";
 import { readdirSync } from "fs";
-export default new GlobalCommand({
+export const command: any = {};
+command.execute = async (interaction: CommandInteraction) => {
+	const images = readdirSync("../util/images");
+	const imageIndex = images.findIndex(Image => Image.startsWith((interaction.options.first as unknown as CommandInteractionOption).value as string));
+
+	// Send the image if it exists, otherwise send an error
+	imageIndex >= 0
+		? await interaction.reply({ embeds: [new MessageEmbed().setImage(`attachment://${images[imageIndex]}`)], files: [`../util/images/${images[imageIndex]}`] })
+		: await interaction.reply({ content: "Not found 😩", ephemeral: true });
+}
+command.help = {
 	name: "image",
 	description: "Sends a pre-defined image",
 	options: [
@@ -21,12 +31,5 @@ export default new GlobalCommand({
 				}
 			]
 		}
-	],
-	async execute(interaction: Interaction) {
-		const images = readdirSync("../util/images");
-		const imageIndex = (images.includes(interaction.args[0].value) ? images.findIndex(Image => Image === interaction.args[0].value) : null);
-		
-		// Send the image if it exists, otherwise send an error
-		imageIndex ? await interaction.respond("\u200b").then(() => {interaction.channel.send(new MessageEmbed().setImage(`../util/images/${images[imageIndex]}`))}) : await interaction.respond("Not found 😩", { ephemeral: true });
-	},
-});
+	]
+}

@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { Vagan } from "../Vagan";
 import { GuildEmoji, Snowflake, User, CommandInteraction } from "discord.js";
-const command: any = {};
+export const command: any = {};
 command.execute = async (interaction: CommandInteraction) => {
 	// Declares some helpful stuff
 	type Command = {
@@ -11,21 +10,21 @@ command.execute = async (interaction: CommandInteraction) => {
 			randomNumber: (min: number, max: number) => number,
 		},
 		args: {
-			target: User,
-			bet: number,
-			amount: number,
-			item: string,
-			page: number
+			target?: User,
+			bet?: number,
+			amount?: number,
+			item?: string,
+			page?: number
 		}
 	}
 	const command: Command = {
 		tools: {
 			replaceReplies: (replies: string[], amount: number) => {
 				const Replies: string[] = [];
-				replies.forEach( (reply: string) => { // @ts-expect-error
-					const emoji = (id: Snowflake): GuildEmoji => { return Vagan.emojis.cache.get(id); }
+				replies.forEach( (reply: string) => {
+					const emoji = (id: Snowflake): GuildEmoji => { return Vagan.emojis.cache.get(id) as GuildEmoji; }
 					const emojis: GuildEmoji[] = [];
-					["817125266593808435", "817125375699845171", "817125438110826547", "817125529555697735"].forEach(emojiID => emojis.push(emoji(emojiID)));
+					[817125266593808435n, 817125375699845171n, 817125438110826547n, 817125529555697735n].forEach(emojiID => emojis.push(emoji(`${emojiID}`)));
 					Replies.push(reply.replace("{amount}", `${emojis[Math.floor(Math.random() * emojis.length)]}${amount}`));
 				});
 				return Replies;
@@ -35,9 +34,9 @@ command.execute = async (interaction: CommandInteraction) => {
 				max = Math.floor(max);
 				return Math.floor(Math.random() * (max - min + 1)) + min;
 			}
-		}, // @ts-expect-error
+		},
 		args: {}
-	};
+	} as Command;
 
 	// Store some info based on the arguments supplied
 	const subcommand = interaction.options[0].options[0];
@@ -295,4 +294,3 @@ command.help = {
 	],
 }
 
-export default command;

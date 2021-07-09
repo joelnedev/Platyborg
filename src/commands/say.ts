@@ -1,5 +1,20 @@
-import { GlobalCommand, Interaction } from "../util/exports.js";
-export default new GlobalCommand({
+import { Vagan } from "../util/exports.js";
+import { CommandInteraction, GuildMember, TextChannel } from "discord.js";
+export const command: any = {};
+command.execute = async (interaction: CommandInteraction) => {
+	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
+	const content: string = interaction.options.find(arg => arg.value === "content")?.value as string;
+	const anonSay = async () => {
+		await interaction.reply({ content: "ok", ephemeral: true });
+		await (interaction.channel as TextChannel).send(content); 
+		(await Vagan.channels.fetch("688757903905259580") as TextChannel).send(`${member.user.tag} said: \n \`${content}\``);
+	}
+
+	interaction.options.find(arg => arg.name === "anonymous")?.value === false
+		? await interaction.reply({ content, allowedMentions: { parse: [] } })
+		: anonSay();
+}
+command.help = {
 	name: "say",
 	description: "Say what you say to say",
 	options: [
@@ -15,15 +30,5 @@ export default new GlobalCommand({
 			type: 5,
 			required: true
 		}
-	],
-	async execute(interaction: Interaction) {
-		const content: string = interaction.args.find(arg => arg.value === "content").value;
-		const anonSay: () => void = async () => {
-			await interaction.respond("ok", { ephemeral: true });
-			await interaction.channel.send(content); // @ts-expect-error
-			interaction.bot.channels.cache.get("688757903905259580").send(`${interaction.author?.tag} said: \n \`${content}\``);
-		}
-
-		interaction.args.find(arg => arg.name === "anonymous").value === false ? await interaction.respond(content, { stripMentions: true }) : anonSay();
-	},
-});
+	]
+}

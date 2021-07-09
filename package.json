@@ -4,21 +4,18 @@
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
   "main": "dist/Vagan.js",
   "engines": {
-    "node": "^14.15.1",
-    "npm": "^7.5.3"
+    "node": "^16.2.0"
   },
   "type": "module",
+  "private": true,
   "scripts": {
     "test": "node -r dotenv/config --trace-warnings .",
-    "start": "pm2 start dist/Vagan.js && hexo server",
+    "start": "pm2 start dist/Vagan.js",
     "stop": "pm2 stop all",
     "compile": "tsc --project tsconfig.json",
     "reset": "sudo rm -rf dist/ && mkdir dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JuhJuhButts/Vagan.git"
-  },
+  "repository": "github:joelnedev/Vagan",
   "keywords": [
     "Vagan",
     "Killer",
@@ -34,13 +31,13 @@
   },
   "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
   "dependencies": {
-    "@joshdb/core": "^1.1.5",
-    "@joshdb/mongo": "^1.1.3",
-    "discord.js": "github:discordjs/discord.js#69dfce33a972305aa0d1b807ce92b75b9129c32a",
-    "pm2": "^4.5.5"
+    "@joshdb/core": "^1.2.5",
+    "@joshdb/mongo": "^1.1.6",
+    "discord.js": "discordjs/discord.js",
+    "pm2": "^5.1.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.25",
+    "@types/node": "^15.12.5",
     "dotenv": "^8.2.0",
     "typescript": "^4.2.2"
   }

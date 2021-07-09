@@ -1,6 +1,23 @@
-import { GlobalCommand, Interaction } from "../util/exports.js";
-import { User, Webhook, WebhookClient } from "discord.js";
-export default new GlobalCommand({
+import { Vagan } from "../util/exports.js";
+import { CommandInteraction, GuildMember, TextChannel, User, Webhook, WebhookClient } from "discord.js";
+export const command: any = {};
+command.execute = async (interaction: CommandInteraction) => {
+	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
+	const content: string = interaction.options.find(arg => arg.name === "content")?.value as string;
+	const anon: boolean = interaction.options.find(arg => arg.name === "anonymous")?.value as boolean;
+
+	await interaction.reply({ content: "kk", ephemeral: true });
+
+	(interaction.channel as TextChannel).createWebhook(member.displayName, {
+		avatar: member.user.displayAvatarURL(),
+		reason: `${member.user.tag} used \`/mimic\``
+	}).then(async (Webhook: Webhook) => {
+		const webhook = new WebhookClient(Webhook.id, Webhook.token!);
+		await webhook.send(content);
+		webhook.delete();
+	});
+}
+command.help = {
 	name: "mimic",
 	description: "Pretend to be another user (like RoboTop's mimic but better because nicknames)",
 	options: [
@@ -22,22 +39,5 @@ export default new GlobalCommand({
 			type: 5,
 			required: true
 		}
-	],
-	async execute(interaction: Interaction) {
-		const content: string = interaction.args.find(arg => arg.name === "content").value;
-		const user: User = await interaction.bot.users.fetch(interaction.args.find(arg => arg.name === "user").value);
-		const anon: boolean = interaction.args.find(arg => arg.name === "anonymous").value;
-
-		await interaction.respond("Working on it...", { ephemeral: true });
-
-		// @ts-expect-error
-		interaction.channel.createWebhook(interaction.bot.KBC.members.cache.get(user.id), {
-			avatar: user.displayAvatarURL(),
-			reason: `${user.tag} used \`/mimic\``
-		}).then(async (Webhook: Webhook) => { // @ts-expect-error
-			const webhook = new WebhookClient(Webhook.id, Webhook.token);
-			await webhook.send(content);
-			webhook.delete();
-		});
-	},
-});
+	]
+}

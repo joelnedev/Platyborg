@@ -1,6 +1,5 @@
 import Josh from "@joshdb/core";
-import { Interaction } from "../interactions/slash";
-import { Client as discordClient, Guild, Snowflake, TextChannel } from "discord.js";
+import { Client as discordClient, Guild, Snowflake, TextChannel, CommandInteraction, ApplicationCommandOption } from "discord.js";
 
 interface Hideout extends Guild {
 	godModeUsers: Snowflake[],
@@ -10,7 +9,7 @@ interface Hideout extends Guild {
 export interface Bot extends discordClient {
 	KBC: Guild,
 	hideout: Hideout,
-	handleError(error: string, interaction: Interaction): void,
+	handleError(error: string, interaction: CommandInteraction): void,
 	showcaseCooldown: Set<Snowflake>,
 	config: {
 		replies: {
@@ -116,7 +115,7 @@ export interface BlackMarket {
 	 * @param {Snowflake} id A user's Discord ID.
 	 * @param {number} amount How much to add.
 	 * @param {"cash"|"bank"} where Add to cash or bank. Default is cash.
-	 * @returns `user` object if successful, error string if failed.
+	 * @returns `user` object if successful.
 	 */
 	add(id: Snowflake, amount: number, where?: "cash"|"bank"): Promise<user>,
 
@@ -125,7 +124,7 @@ export interface BlackMarket {
 	 * @param {Snowflake} id A user's Discord ID.
 	 * @param {number} amount How much to remove.
 	 * @param {"cash"|"bank"} where Remove from cash or bank. Default is cash.
-	 * @returns `user` object if successful, error string if failed.
+	 * @returns `user` object if successful.
 	 */
 	subtract(id: Snowflake, amount: number, where?: "cash"|"bank"): Promise<user>,
 
@@ -133,7 +132,7 @@ export interface BlackMarket {
 	 * Move money from cash to bank.
 	 * @param {Snowflake} id A user's Discord ID.
 	 * @param {number} amount How much to add.
-	 * @returns `user` object if successful, error string if failed.
+	 * @returns `user` object if successful.
 	 */
 	deposit(id: Snowflake, amount: number): Promise<user|string>,
 
@@ -141,14 +140,14 @@ export interface BlackMarket {
 	 * Move money from bank to cash.
 	 * @param {Snowflake} id A user's Discord ID.
 	 * @param {number} amount How much to add.
-	 * @returns `user` object if successful, error string if failed.
+	 * @returns `user` object if successful.
 	 */
 	withdraw(id: Snowflake, amount: number): Promise<user|string>,
 
 	/**
 	 * Adds an item to a user.
 	 * @param {Snowflake} id A user's Discord ID.
-	 * @returns `user` object if successful, error string if failed.
+	 * @returns `user` object if successful.
 	 */
 	addItem(id: Snowflake, amount: number): Promise<user>
 };

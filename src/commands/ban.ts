@@ -1,17 +1,18 @@
-import { GlobalCommand, Interaction } from "../util/exports.js";
-import { MessageEmbed } from "discord.js";
-export default new GlobalCommand({
-	name: "ban",
-	description: "Pretends to ban someone", 
-	execute(interaction: Interaction) {
-
+import { Vagan } from "../util/exports.js";
+import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+export const command: any = {};
+command.execute = async (interaction: CommandInteraction) => {
 		// Self explanatory 😼
+		const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
 		const embed = new MessageEmbed()
 			.setTitle("Baned!")
 			.setColor("#00ff00")
-			.setDescription(interaction.bot.config.replies.ban[Math.floor(Math.random() * interaction.bot.config.replies.ban.length)])
-			.setAuthor(interaction.member?.displayName, interaction.author?.displayAvatarURL())
+			.setDescription(Vagan.config.replies.ban[Math.floor(Math.random() * Vagan.config.replies.ban.length)])
+			.setAuthor(member.displayName, member.user.displayAvatarURL())
 			.setFooter("Nobody was baned in the makeing of this joek");
-		interaction.respond(undefined, { embed });
-	},
-});
+		interaction.reply({ embeds: [embed] });
+	}
+command.help = {
+	name: "ban",
+	description: "Pretends to ban someone"
+}

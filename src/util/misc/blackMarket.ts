@@ -7,7 +7,7 @@ import provider from "@joshdb/mongo";
 export const blackMarket: BlackMarket = {
 	users: new Josh<user>({
 		name: "users",
-		provider, // @ts-expect-error
+		provider,
 		providerOptions: {
 			collection: "vagansvault",
 			url: process.env.MONGO_URL
@@ -16,7 +16,7 @@ export const blackMarket: BlackMarket = {
 
 	items: new Josh<item>({
 		name: "items",
-		provider, // @ts-expect-error
+		provider,
 		providerOptions: {
 			collection: "vagansvault",
 			url: process.env.MONGO_URL
@@ -25,7 +25,7 @@ export const blackMarket: BlackMarket = {
 
 	roles: new Josh<role>({
 		name: "roles",
-		provider, // @ts-expect-error
+		provider,
 		providerOptions: {
 			collection: "vagansvault",
 			url: process.env.MONGO_URL
