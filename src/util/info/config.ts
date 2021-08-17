@@ -1,8 +1,8 @@
-export default {
+export const config = {
 	"replies": {
 		"error": [
 			"sry don’t speak idot",
-			"I’ve come to make an announcement. {username} is a horrible speller.",
+			"I’ve come to make an announcement. {username} is a failure.",
 			"I can come up with better fake syntax while tied up, blindfolded, and typing with my robo-nose.",
 			"call an ambulance, this dude had a stroke",
 			"UwU what’s this invalid syntax you sent me?",
@@ -13,8 +13,7 @@ export default {
 			"My purpose is to tell other people about my purpose, {username}.",
 			"What is a purpose? A miserable little pile of secrets. But enough talk! Have at ye!",
 			"*silently has an existential crisis*",
-			"My purpose is to be a servant to dipshits like {username}",
-			"A dumbass once told me: “All Fishy Boopkinses are Spikes, But not all spikes are fishy boopkinses”"
+			"My purpose is to be a servant to dipshits like {username}"
 		],
 		"ping": [
 			"pingas",
@@ -25,6 +24,7 @@ export default {
 			"Who TF...",
 			"why u ping me",
 			"ok",
+			"A dumbass once told me: “All Fishy Boopkinses are Spikes, But not all spikes are fishy boopkinses”",
 			"ok what goofy ass mickey mouse clubhouse motherfucker pinged me, if it was an @ everyone ping im going to find you and shove my fist so far up your ass it will come out of your mouth, if it was a regular ping still fuck you. i'm honestly tired of all these motherfuckers thinking theyre so funny to randomly ping everyone on the server. fuck you and every little bitch that pings me i dont have all day to be on discord to see this shit. go get a fucking hobby and delete discord im so sick of this shit."
 		],
 		"ban": [
@@ -50,7 +50,7 @@ export default {
 		"slut": {
 			"win": [
 				"You strip at that \"kick ass party\"! You earn {amount}",
-				"You strip at that Cappucino's nephew's party! You earn {amount}",
+				"You strip at Cappucino's nephew's party! You earn {amount}",
 				"thicc beans. also u win {amount}"
 			],
 			"fail": [
@@ -62,7 +62,7 @@ export default {
 		},
 		"crime": {
 			"win": [
-				"You repost a meme in the Killer Bean subreddit. You turn your 600 upvotes into {amount}. you monster",
+				"You repost a meme in the Killer Bean subreddit and turn your 600 upvotes into {amount}. you monster",
 				"You're hired by the Shadow Agency to eliminate a threat and get paid {amount}.",
 				"You sell guns for Vagan and get {amount} for your share.",
 				"You steal ROBUX from the Bean Universe group in ROBLOX and make {amount}.",

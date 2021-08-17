@@ -1,19 +1,19 @@
 import { Vagan } from "../util/exports.js";
 import { CommandInteraction, GuildMember, MessageEmbed, Snowflake } from "discord.js";
-export const command: any = {};
-command.execute = async (interaction: CommandInteraction) => {
+import { ApplicationCommandOptionType } from "discord-api-types";
+export const execute = async (interaction: CommandInteraction) => {
 	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
 
-	// @ts-expect-error | Set variables
-	const value: string|Snowflake = interaction.options[0].options?.[0]?.value; // @ts-expect-error
-	const resolved = interaction.toJSON().data?.resolved?.users[value];
+	// Set variables
+	const value: Snowflake|string = (interaction.options.getUser("user")?.id ?? interaction.options.getString("info", true));
+	const resolved = interaction.options.getUser("user") ?? undefined;
 	const name = resolved ? `${resolved.username}#${resolved.discriminator}` : undefined;
 
 	// Initialize embed
 	const embed = new MessageEmbed()
 		.setAuthor(member.displayName, member.user.displayAvatarURL())
-		.setColor("#03b1fc")
-		.setTitle(`Info for ${name ? name : value}`);
+		.setColor(0x03b1fc)
+		.setTitle(`Info for ${name ?? value}`);
 
 	// Set description
 	switch (value) {
@@ -40,35 +40,32 @@ command.execute = async (interaction: CommandInteraction) => {
 			embed.setDescription(`To become a Shadow Bean you must:
 • Be at least level 10 on RoboTop XP system
 • Be trusted by all admins
-• Have at least 3 existing shadow beans nominate you for it`);
-			break;
-		case "Content Creator": // Content creator
-			embed.setDescription("To get the Content Creator role, you must send spoons a link to your YouTube or Twitch channel with over 1000 subscribers.");
+• Have at least 2/3 of existing shadow beans nominate you for it`);
 			break;
 		default:
 			embed.setDescription("Who's that? Ask me about someone I know.");
 	}
-	interaction.reply({ embeds: [embed], ephemeral: interaction.options.find(arg => arg.name === "public")?.value as boolean });
+	interaction.reply({ embeds: [embed], ephemeral: interaction.options.getBoolean("public")! });
 }
-command.help = {
+export const help = {
 	name: "info",
 	description: "Provides extremely helpful information on users and other things (for more details, use RoboTop)", 
 	options: [
 		{
 			name: "user",
 			description: "User to get information on",
-			type: 1,
+			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
 					name: "user",
 					description: "User to get information on",
-					type: 6,
+					type: ApplicationCommandOptionType.User,
 					required: true
 				},
 				{
 					name: "public",
 					description: "Whether or not to show the message to everyone",
-					type: 5,
+					type: ApplicationCommandOptionType.Boolean,
 					required: true
 				}
 			]
@@ -76,12 +73,12 @@ command.help = {
 		{
 			name: "other",
 			description: "Other information",
-			type: 1,
+			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
 					name: "info",
 					description: "What to get info on",
-					type: 3,
+					type: ApplicationCommandOptionType.String,
 					required: true,
 					choices: [
 						{
@@ -91,17 +88,13 @@ command.help = {
 						{
 							name: "shadowbean",
 							value: "Shadow Bean"
-						},
-						{
-							name: "content creator",
-							value: "Content Creator"
 						}
 					]
 				},
 				{
 					name: "public",
 					description: "Other options to get information on",
-					type: 5,
+					type: ApplicationCommandOptionType.Boolean,
 					required: true
 				}
 			]

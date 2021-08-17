@@ -1,9 +1,9 @@
 import { blackMarket, Vagan } from "../util/exports.js";
 import { Collection, CommandInteraction, GuildMember, Message, MessageEmbed, TextChannel } from "discord.js";
-import { restart } from "pm2";
-export const command: any = {};
-command.execute = async (interaction: CommandInteraction) => {
-	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
+import * as pm2 from "pm2";
+import { ApplicationCommandOptionType } from "discord-api-types";
+export const execute = async (interaction: CommandInteraction) => {
+	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
 
 	// Only allows god mode users to use the command (and sends non god mode users a polite, informative message about why they cannot execute it)
 	if (!Vagan.hideout.godModeUsers.includes(member.user.id) || member.user.id !== "spoons id") {
@@ -13,7 +13,7 @@ command.execute = async (interaction: CommandInteraction) => {
 
 	// Declares a couple objects: tempStorage for temporary storage and func to make the switch more legible
 	const tempStorage: any = {};
-	const func = (interaction.options.find(arg => arg.name === "function")?.value as string)?.toLowerCase();
+	const func = interaction.options.getString("function")!.toLowerCase();
 
 	// Runs different functions based on specification
 	switch (func) {
@@ -24,7 +24,7 @@ command.execute = async (interaction: CommandInteraction) => {
 
 		case "additem":
 			tempStorage.addItem = {
-				name: interaction.options.find(arg => arg.name === "arg0")?.value
+				name: interaction.options.get("arg0")!.value
 			};
 
 			await interaction.reply(`ok sp**on (or other ~~gender~~ admin). set more properties for ${tempStorage.addItem.itemName}`);
@@ -153,23 +153,23 @@ command.execute = async (interaction: CommandInteraction) => {
 	await Vagan.hideout.logChannel.send(sendMe.join("\n"));
 	
 	if (tempStorage.func === "reboot") {
-		restart("all", () => console.log(`Vagan restarted by ${member.user.tag}`));
+		pm2.restart("all", () => console.log(`Vagan restarted by ${member.user.tag}`));
 	}
 }
-command.help = {
+export const help = {
 	name: "root",
 	description: "A number of functions that can only be run by god mode users", 
 	options: [
 		{
 			name: "function",
 			description: "Function to run",
-			type: 3,
+			type: ApplicationCommandOptionType.String,
 			required: true
 		},
 		{
 			name: "arg0",
 			description: "in case the function needs args",
-			type: 3,
+			type: ApplicationCommandOptionType.String,
 			required: false
 		}
 	]

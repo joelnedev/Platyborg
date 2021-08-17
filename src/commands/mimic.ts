@@ -1,10 +1,10 @@
 import { Vagan } from "../util/exports.js";
 import { CommandInteraction, GuildMember, TextChannel, User, Webhook, WebhookClient } from "discord.js";
-export const command: any = {};
-command.execute = async (interaction: CommandInteraction) => {
-	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
-	const content: string = interaction.options.find(arg => arg.name === "content")?.value as string;
-	const anon: boolean = interaction.options.find(arg => arg.name === "anonymous")?.value as boolean;
+import { ApplicationCommandOptionType } from "discord-api-types";
+export const execute = async (interaction: CommandInteraction) => {
+	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
+	const content: string = interaction.options.getString("content")!;
+	const anon: boolean = interaction.options.getBoolean("anonymous")!;
 
 	await interaction.reply({ content: "kk", ephemeral: true });
 
@@ -12,31 +12,31 @@ command.execute = async (interaction: CommandInteraction) => {
 		avatar: member.user.displayAvatarURL(),
 		reason: `${member.user.tag} used \`/mimic\``
 	}).then(async (Webhook: Webhook) => {
-		const webhook = new WebhookClient(Webhook.id, Webhook.token!);
+		const webhook = new WebhookClient({ id: Webhook.id, token: Webhook.token! });
 		await webhook.send(content);
 		webhook.delete();
 	});
 }
-command.help = {
+export const help = {
 	name: "mimic",
 	description: "Pretend to be another user (like RoboTop's mimic but better because nicknames)",
 	options: [
 		{
 			name: "user",
 			description: "User to mimic",
-			type: 6,
+			type: ApplicationCommandOptionType.User,
 			required: true
 		},
 		{
 			name: "content",
 			description: "What the user should say",
-			type: 3,
+			type: ApplicationCommandOptionType.String,
 			required: true
 		},
 		{
 			name: "anonymous",
 			description: "Whether to show your input publicly",
-			type: 5,
+			type: ApplicationCommandOptionType.Boolean,
 			required: true
 		}
 	]

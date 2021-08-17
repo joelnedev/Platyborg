@@ -1,2 +1,2 @@
 import { CommandInteraction } from "discord.js";
-export const execute = async (interaction: CommandInteraction, command: any) => { return interaction.reply({ content: "This command is in progress and not available. Stay tuned, it'll go live soon!", ephemeral: true }); }
+export const execute = async (interaction: CommandInteraction) => { return interaction.reply({ content: "This command is in progress and not available. Stay tuned, it'll go live soon!", ephemeral: true }); }

@@ -1,20 +1,20 @@
-import { Bot, blackMarket, Interaction } from "../../util/exports.js";
-import { MessageEmbed } from "discord.js";
+import { blackMarket, randomNumber, replaceReplies, Vagan } from "../../util/exports.js";
+import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 export default {
-	async execute(interaction: CommandInteraction, command: any) {
+	async execute(interaction: CommandInteraction) {
 
 		// Set variables
-		const Vagan: Bot = interaction.bot;
+		const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
 		const config = Vagan.config.economy.work;
-		const add: number = command.tools.randomNumber(config.win.min, config.win.max);
-		const replies: string[] = command.tools.replaceReplies(Vagan.config.replies.work, add);
+		const add = randomNumber(config.win.min, config.win.max);
+		const replies = replaceReplies(Vagan.config.replies.work, add);
 
 		// Modify their balance, then send an embed with a random message containing their balance
-		await blackMarket.users.math(`${interaction.user?.id}.cash`, "add", add);
+		await blackMarket.add(member.id, add, "cash");
 		const embed = new MessageEmbed()
-			.setAuthor(interaction.member?.displayName, interaction.user?.displayAvatarURL())
+			.setAuthor(member.displayName, interaction.user?.displayAvatarURL())
 			.setDescription(replies[Math.floor(Math.random() * replies.length)])
-			.setColor("#00FF00");
-		interaction.reply(undefined, { embed });
+			.setColor(0x00FF00);
+		interaction.reply({ embeds: [ embed ] });
 	}
 };

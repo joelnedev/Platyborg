@@ -4,7 +4,7 @@
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
   "main": "dist/Vagan.js",
   "engines": {
-    "node": "^16.2.0"
+    "node": "^16.6.1"
   },
   "type": "module",
   "private": true,
@@ -12,8 +12,10 @@
     "test": "node -r dotenv/config --trace-warnings .",
     "start": "pm2 start dist/Vagan.js",
     "stop": "pm2 stop all",
+    "restart": "yarn run stop && yarn run start",
     "compile": "tsc --project tsconfig.json",
-    "reset": "sudo rm -rf dist/ && mkdir dist"
+    "reset": "sudo rm -rf dist/ && mkdir dist",
+    "reload": "yarn run reset && yarn run compile && yarn run restart"
   },
   "repository": "github:joelnedev/Vagan",
   "keywords": [
@@ -26,19 +28,21 @@
   "author": "JuhJuhButt",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JuhJuhButts/Vagan/issues",
+    "url": "https://github.com/joelnedev/Vagan/issues",
     "email": "joel@joelne.tech"
   },
-  "homepage": "https://github.com/JuhJuhButts/Vagan#readme",
+  "homepage": "https://github.com/joelnedev/Vagan#readme",
   "dependencies": {
     "@joshdb/core": "^1.2.5",
     "@joshdb/mongo": "^1.1.6",
-    "discord.js": "discordjs/discord.js",
-    "pm2": "^5.1.0"
+    "discord.js": "^13.0.1",
+    "pm2": "^5.1.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/node": "^15.12.5",
-    "dotenv": "^8.2.0",
-    "typescript": "^4.2.2"
+    "@types/node": "^16.4.13",
+    "discord-api-types": "^0.22.0",
+    "dotenv": "^10.0.0",
+    "typescript": "^4.3.5"
   }
 }

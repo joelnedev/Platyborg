@@ -1,15 +1,16 @@
-import { BlackMarket, user, item, role } from "./types";
-import { Snowflake } from "discord.js";
+import Josh from "@joshdb/core"; // @ts-expect-error 7016
+import provider from "@joshdb/mongo";
+import { GuildEmoji, Snowflake } from "discord.js";
+import { BlackMarket, item, role, user, Vagan } from "../exports.js";
 
 // Allows me to call currency databases/functions later in the file.
-import Josh from "@joshdb/core"; // @ts-expect-error
-import provider from "@joshdb/mongo";
 export const blackMarket: BlackMarket = {
+	
 	users: new Josh<user>({
 		name: "users",
 		provider,
 		providerOptions: {
-			collection: "vagansvault",
+			collection: "VagansVaultUsers",
 			url: process.env.MONGO_URL
 		}
 	}),
@@ -18,7 +19,7 @@ export const blackMarket: BlackMarket = {
 		name: "items",
 		provider,
 		providerOptions: {
-			collection: "vagansvault",
+			collection: "VagansVaultItems",
 			url: process.env.MONGO_URL
 		}
 	}),
@@ -27,7 +28,7 @@ export const blackMarket: BlackMarket = {
 		name: "roles",
 		provider,
 		providerOptions: {
-			collection: "vagansvault",
+			collection: "VagansVaultRoles",
 			url: process.env.MONGO_URL
 		}
 	}),
@@ -80,8 +81,30 @@ export const blackMarket: BlackMarket = {
 		return User;
 	},
 
-	async addItem(id: Snowflake, itemID: number): Promise<user> {
-		await blackMarket.users.push(`${id}.items`, itemID, true);
+	async addItem(id: Snowflake, itemId: string): Promise<user> {
+		await blackMarket.users.push(`${id}.items`, itemId, true);
+		return blackMarket.users.get(`${id}`);
+	},
+
+	async removeItem(id: Snowflake, itemId: string): Promise<user> {
+		const User = await blackMarket.users.get(id);
+		await blackMarket.users.set(`${id}.items`, User.items.splice(User.items.findIndex((Item) => Item === itemId), 1));
 		return blackMarket.users.get(`${id}`);
 	}
 };
+
+export const replaceReplies = (replies: string[], amount: number) => {
+	const Replies: string[] = [];
+	replies.forEach( (reply: string) => {
+		const emoji = (id: Snowflake): GuildEmoji => { return Vagan.emojis.cache.get(id) as GuildEmoji; }
+		const emojis: GuildEmoji[] = [];
+		[817125266593808435n, 817125375699845171n, 817125438110826547n, 817125529555697735n].forEach(emojiId => emojis.push(emoji(`${emojiId}`)));
+		Replies.push(reply.replace("{amount}", `${emojis[Math.floor(Math.random() * emojis.length)]}${amount}`));
+	});
+	return Replies;
+}
+export const randomNumber = (min: number, max: number) => {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}

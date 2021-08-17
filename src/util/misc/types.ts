@@ -1,5 +1,6 @@
 import Josh from "@joshdb/core";
-import { Client as discordClient, Guild, Snowflake, TextChannel, CommandInteraction, ApplicationCommandOption } from "discord.js";
+import { Client as discordClient, Guild, Snowflake, TextChannel, CommandInteraction } from "discord.js";
+import winston from "winston";
 
 interface Hideout extends Guild {
 	godModeUsers: Snowflake[],
@@ -11,6 +12,7 @@ export interface Bot extends discordClient {
 	hideout: Hideout,
 	handleError(error: string, interaction: CommandInteraction): void,
 	showcaseCooldown: Set<Snowflake>,
+	logger: winston.Logger,
 	config: {
 		replies: {
 			error: string[],
@@ -147,7 +149,16 @@ export interface BlackMarket {
 	/**
 	 * Adds an item to a user.
 	 * @param {Snowflake} id A user's Discord ID.
+	 * @param {string} itemId ID of the item to add.
 	 * @returns `user` object if successful.
 	 */
-	addItem(id: Snowflake, amount: number): Promise<user>
+	addItem(id: Snowflake, itemId: string): Promise<user>,
+
+	/**
+	 * Removes an item from a user.
+	 * @param {Snowflake} id A user's Discord ID.
+	 * @param {string} itemId ID of the item to remove.
+	 * @returns `user` object if successful.
+	 */
+	removeItem(id: Snowflake, itemId: string): Promise<user>
 };

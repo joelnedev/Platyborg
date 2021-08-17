@@ -1,2 +1,4 @@
 .env
+tsBuildInfo.json
 node_modules/
+dist/

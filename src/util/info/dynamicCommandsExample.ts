@@ -3,15 +3,14 @@
 
 import { Vagan } from "../util/exports.js";
 import { CommandInteraction, GuildMember } from "discord.js";
-export const command: any = {};
 // This is what will be executed when a command is invoked
-command.execute = (interaction: CommandInteraction) => {
+export const execute = (interaction: CommandInteraction) => {
 	// This ensures that I have a d.js GuildMember to work with
 	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
 
 	// stuff goes here
 }
-command.help = {
+export const help = {
 	name: "name of slash command",
 	description: "description of slash command",
 	options: [
@@ -40,12 +39,11 @@ command.help = {
 
 import { Vagan } from "../util/exports.js";
 import { MessageEmbed, CommandInteraction, GuildMember } from "discord.js";
-export const command: any = {};
-command.execute = (interaction: CommandInteraction) => {
+export const execute = (interaction: CommandInteraction) => {
 	const member = new GuildMember(Vagan, interaction.member, Vagan.KBC);
 
 }
-command.help = {
+export const help = {
 	name: "name of slash command",
 	description: "description of slash command",
 	options: [
