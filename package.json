@@ -1,48 +1,49 @@
 {
-  "name": "vagan",
-  "version": "3.0.0",
+  "name": "platyborg",
+  "version": "3.1.0",
   "description": "A muultifunctional Discord bot created for Killer Bean Club.",
-  "main": "dist/Vagan.js",
+  "main": "dist/Platyborg.js",
   "engines": {
     "node": "^16.6.1"
   },
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node -r dotenv/config --trace-warnings .",
-    "start": "pm2 start dist/Vagan.js",
+    "start": "pm2 start dist/Platyborg.js",
     "stop": "pm2 stop all",
     "restart": "yarn run stop && yarn run start",
-    "compile": "tsc --project tsconfig.json",
-    "reset": "sudo rm -rf dist/ && mkdir dist",
+    "build": "tsc --project tsconfig.json",
+    "reset": "rimraf dist/ && rm ./tsBuildInfo.json && mkdir dist",
     "reload": "yarn run reset && yarn run compile && yarn run restart"
   },
-  "repository": "github:joelnedev/Vagan",
+  "repository": "github:joelnedev/Platyborg",
   "keywords": [
-    "Vagan",
+    "Platyborg",
     "Killer",
     "Bean",
     "Discord",
     "Bot"
   ],
-  "author": "JuhJuhButt",
+  "author": "Joel N. Evans",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joelnedev/Vagan/issues",
+    "url": "https://github.com/joelnedev/Platyborg/issues",
     "email": "joel@joelne.tech"
   },
-  "homepage": "https://github.com/joelnedev/Vagan#readme",
+  "homepage": "https://github.com/joelnedev/Platyborg#readme",
   "dependencies": {
-    "@joshdb/core": "^1.2.5",
-    "@joshdb/mongo": "^1.1.6",
-    "discord.js": "^13.0.1",
-    "pm2": "^5.1.0",
+    "@joshdb/core": "^1.2.6",
+    "@joshdb/sqlite": "^1.1.6",
+    "discord.js": "^13.2.0",
+    "pm2": "^5.1.2",
+    "rimraf": "^3.0.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/node": "^16.4.13",
-    "discord-api-types": "^0.22.0",
+    "@types/node": "^16.10.3",
+    "discord-api-types": "^0.23.1",
     "dotenv": "^10.0.0",
-    "typescript": "^4.3.5"
-  }
+    "typescript": "^4.4.3"
+  },
+  "packageManager": "yarn@3.0.2"
 }

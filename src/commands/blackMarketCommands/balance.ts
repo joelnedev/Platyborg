@@ -1,15 +1,16 @@
-import { blackMarket, Vagan } from "../../util/exports.js";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { blackMarket, platyborg } from "../../util/index.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 export const execute = async (interaction: CommandInteraction) => {
 	// Set variables
-	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
-	const user = await blackMarket.add(interaction.options.getUser("user", true).id, 0);
+	const member = await platyborg.PFC.members.fetch(interaction.user.id);
+	const user = await blackMarket.getUser(interaction.options.getUser("user") ? interaction.options.getUser("user")!.id : interaction.user.id);
+	const beancoin = platyborg.emoji.randomBeancoin();
 	const embed = new MessageEmbed()
-		.setAuthor(member.displayName, member.user.displayAvatarURL())
-		.addField("Cash", `${user.cash}`)
-		.addField("Bank", `${user.bank}`)
-		.addField("Net Worth", `${user.cash + user.bank}`);
+		.setAuthor(member.nickname ?? interaction.user.username, interaction.user.displayAvatarURL())
+		.addField("Cash", `${beancoin}${user.cash}`)
+		.addField("Bank", `${beancoin}${user.bank}`)
+		.addField("Net Worth", `${beancoin}${user.cash + user.bank}`);
 
 	// Send info
-	interaction.reply({ embeds: [embed], ephemeral: true });
+	interaction.reply({ embeds: [ embed ], ephemeral: true });
 }

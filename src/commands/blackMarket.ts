@@ -1,9 +1,15 @@
-import { Vagan } from "../util/exports.js";
+import { blackMarket, platyborg } from "../util/index.js";
 import { CommandInteraction } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types";
 export const execute = async (interaction: CommandInteraction) => {
-	try { await (await import(`./commands/blackMarketCommands/${interaction.options.getSubcommand(true)}.js`)).execute(interaction); }
-	catch (error) { Vagan.handleError(error, interaction); }
+	if (interaction.options.getSubcommand(true) === "bankrob"||"crime"||"heist"||"rob"||"slut"||"work")
+		await blackMarket.canRun(interaction.user.id, interaction.options.getSubcommand() as any)
+			? blackMarket.used(interaction.user.id, interaction.options.getSubcommand() as any)
+			: interaction.reply({ content: "You just used that command!", ephemeral: true });
+	if (interaction.replied) return;
+
+	try { await (await import(`./blackMarketCommands/${interaction.options.getSubcommand(true)}.js`)).execute(interaction); }
+	catch (error) { platyborg.handleError(interaction, error as string); }
 };
 
 export const help = {
@@ -169,7 +175,7 @@ export const help = {
 				},
 				{
 					name: "sell",
-					description: "Sell an item to another user or to Vagan",
+					description: "Sell an item to another user or to Platyborg",
 					type: ApplicationCommandOptionType.Subcommand,
 					options: [
 						{
@@ -180,7 +186,7 @@ export const help = {
 						},
 						{
 							name: "user",
-							description: "The user to sell to (leave empty to sell to Vagan)",
+							description: "The user to sell to (leave empty to sell to Platyborg)",
 							type: ApplicationCommandOptionType.User,
 							required: false
 						}

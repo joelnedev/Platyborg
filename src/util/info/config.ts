@@ -36,59 +36,58 @@ export const config = {
 			"bro don't say that or poope will get mad at you"
 		],
 		"work": [
-			"You fire Vagan, and he doesn't shoot you! You earn {amount}.",
-			"You help moderate the Killer Bean Club and get paid {amount}. Thanks!",
-			"You work as a chef on a chinese food restaurant and get paid {amount}.",
-			"You work as a cop in Beantown and earn {amount}.",
-			"You work moving crates for Cappuccino and earn {amount}.",
-			"You help the MIB do a secret mission and get paid {amount}.",
-			"You voice a character in the Killer Bean series and Jeff Lew pays you {amount}.",
-			"You help develop Bean Universe on ROBLOX and get paid {amount}.",
-			"You manage to convince Jet Bean to finally pay the bill, and make {amount} in the process.",
-			"After almost getting killed by Killer Bean while working in a bar, he pays you {amount} for the drinks."
+			"You attack Platyborg, and he doesn't beat you to death! You earn {amount}.",
+			"You help harass the admins and mods of the Phineas and Ferb Chat and get paid {amount}. Thanks!",
+			"You work as a chef in a chinese food restaurant and get paid {amount}.",
+			"You work as a cop in Danville and earn {amount}.",
+			"You work moving crates for Dr. Doofenshmirtz and earn {amount}.",
+			"You help O.w.C.A. with a secret mission and get paid {amount}.",
+			"You voice a character in the Phineas and Ferb series and Disney pays you {amount}.",
+			"You help develop Baljeet Universe on ROBLOX and get paid {amount}.",
+			"You manage to show Baljeet how to finally be cool, and make {amount} in the process.",
+			"After almost getting killed by one of the boys' inventions, they pay you {amount} for the materials for it."
 		],
 		"slut": {
 			"win": [
-				"You strip at that \"kick ass party\"! You earn {amount}",
-				"You strip at Cappucino's nephew's party! You earn {amount}",
-				"thicc beans. also u win {amount}"
+				"You strip at Buford's kick ass party (from the episode where they were in high school)! You earn {amount}",
+				"You strip at Buford's birthday party! You earn {amount}",
+				"child porn. also u win {amount}"
 			],
 			"fail": [
-				"When you dance at the bar, Jet Bean accidentally kicks you in the groin while fighting someone and you drop {amount}.",
-				"You shouldn't have danced at that party! Killer Bean attacked and you lost {amount}.",
-				"Yours was big, but his was bigger! You lose {amount}.",
-				"thicc beans. also u lose {amount}"
+				"When you dance at the bar, Perry the Platypus accidentally kicks you in the groin while fighting someone and you drop {amount}.",
+				"You shouldn't have danced at that party! Norm attacked and you lost {amount}.",
+				"Yours was big, but Baljeet's was bigger! You lose {amount}.",
+				"child porn. also u lose {amount}"
 			]
 		},
 		"crime": {
 			"win": [
-				"You repost a meme in the Killer Bean subreddit and turn your 600 upvotes into {amount}. you monster",
-				"You're hired by the Shadow Agency to eliminate a threat and get paid {amount}.",
-				"You sell guns for Vagan and get {amount} for your share.",
-				"You steal ROBUX from the Bean Universe group in ROBLOX and make {amount}.",
-				"You're sent by Cappuccino to eliminate rival beans. He pays you {amount}.",
-				"You never paid your bill in the Chinese restaurant and you saved {amount}.",
-				"You steal {amount} from a citizen in Beantown."
+				"You repost a meme in the Phineas and Ferb subreddit and turn your 600 upvotes into {amount}. you monster",
+				"You're hired by the SS SN to eliminate a threat and get paid {amount}.",
+				"You sell illegal items for Platyborg and get {amount} for your share.",
+				"You steal ROBUX from the Baljeet Universe group in ROBLOX and make {amount}.",
+				"You're sent by Doofenshmirtz to eliminate rival evil scientists. He pays you {amount}.",
+				"You steal {amount} from a citizen in Danville."
 			],
 			"fail": [
-				"You try to steal money from a citizen in Beantown. You get caught and are fined {amount}.",
-				"You're sent by Cappuccino to eliminate rival beans, but they get you first and take {amount}!",
-				"You should've turned down that music! Killer Bean attacks you and steals {amount}.",
-				"You make a double flusher in the bar's bathroom, and have to pay {amount} for the water bill.",
-				"You shouldn't have tried to kill Killer Bean. You lose {amount}.",
-				"The narcotics departments's sales drop by 57% percent. You tell Cappuccino your social security number as he throws you out the window, and he uses it to steal {amount} from you.",
+				"You try to steal money from a citizen in Danville. You get caught and are fined {amount}.",
+				"You're sent by Doofenshmirtz to eliminate rival evil scientists, but they get you first and take {amount}!",
+				"You should've turned down that music! Buford attacks you and steals {amount}.",
+				"You make a double flusher in the Flynn-Fletchers' bathroom, and have to pay {amount} for the water bill.",
+				"You shouldn't have tried to kill Vanessa. You lose {amount}.",
+				"The narcotics departments's sales drop by 57% percent. You tell Doofenshmirtz (from the second dimension) your social security number as he throws you out the window, and he uses it to steal {amount} from you.",
 				"You're forced to pay the bill (that's been running for 3 months!) in a Chinese restaurant. You pay {amount}.",
-				"You try to sell guns but get scammed for {amount}.",
+				"You try to sell illegal items for Platyborg but get scammed for {amount}.",
 				"You can't handle Cappuccino's narcotics department and have to pay {amount}",
-				"The Shadow Agency hires you to eliminate a threat, but you fail and lose {amount}."
+				"The SS SN hires you to eliminate a threat, but you fail and lose {amount}."
 			]
 		},
 		"rob": {
 			"win": [
-				"You steal {amount} from a citizen in Beantown."
+				"You steal {amount} from a citizen in Danville."
 			],
 			"fail": [
-				"You try to steal money from a citizen in Beantown. You get caught and are fined {amount}."
+				"You try to steal money from a citizen in Danville. You get caught and are fined {amount}."
 			]
 		}
 	},
@@ -113,6 +112,42 @@ export const config = {
 			"failRate": 0.25
 		},
 		"crime": {
+			"cooldown": 180,
+			"win": {
+				"min": 700,
+				"max": 2000
+			},
+			"fail": {
+				"min": 1000,
+				"max": 1500
+			},
+			"failRate": 0.45
+		},
+		"bankrob": {
+			"cooldown": 180,
+			"win": {
+				"min": 700,
+				"max": 2000
+			},
+			"fail": {
+				"min": 1000,
+				"max": 1500
+			},
+			"failRate": 0.45
+		},
+		"heist": {
+			"cooldown": 180,
+			"win": {
+				"min": 700,
+				"max": 2000
+			},
+			"fail": {
+				"min": 1000,
+				"max": 1500
+			},
+			"failRate": 0.45
+		},
+		"rob": {
 			"cooldown": 180,
 			"win": {
 				"min": 700,

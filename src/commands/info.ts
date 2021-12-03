@@ -1,8 +1,8 @@
-import { Vagan } from "../util/exports.js";
+import { platyborg } from "../util/index.js";
 import { CommandInteraction, GuildMember, MessageEmbed, Snowflake } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types";
 export const execute = async (interaction: CommandInteraction) => {
-	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
+	const member = await platyborg.PFC.members.fetch(interaction.user.id);
 
 	// Set variables
 	const value: Snowflake|string = (interaction.options.getUser("user")?.id ?? interaction.options.getString("info", true));
@@ -11,7 +11,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
 	// Initialize embed
 	const embed = new MessageEmbed()
-		.setAuthor(member.displayName, member.user.displayAvatarURL())
+		.setAuthor(member.nickname ?? interaction.user.username, interaction.user.displayAvatarURL())
 		.setColor(0x03b1fc)
 		.setTitle(`Info for ${name ?? value}`);
 
@@ -28,7 +28,7 @@ export const execute = async (interaction: CommandInteraction) => {
 			embed.setDescription("The best mod in the server, and also my dad (he created me).");
 			break;
 		case "766295959700897813": // vegen
-			embed.setDescription("I'm Vagan, a character from Killer Bean Forever. (Technically I'm dead but that's not the point.) \n You can see what I can do by typing `/` and browsing through what's listed under my section. (By the way, you can get technical info with `/botinfo`.) ");
+			embed.setDescription("I'm Platyborg, a character from Killer Bean Forever. (Technically I'm dead but that's not the point.) \n You can see what I can do by typing `/` and browsing through what's listed under my section. (By the way, you can get technical info with `/botinfo`.) ");
 			break;
 		case "615720739328491526": // talked 40
 			embed.setDescription("She is a Shadow Bean and amazing artist (in fact, she drew my profile picture!)");
@@ -45,7 +45,7 @@ export const execute = async (interaction: CommandInteraction) => {
 		default:
 			embed.setDescription("Who's that? Ask me about someone I know.");
 	}
-	interaction.reply({ embeds: [embed], ephemeral: interaction.options.getBoolean("public")! });
+	interaction.reply({ embeds: [embed], ephemeral: !interaction.options.getBoolean("public")! });
 }
 export const help = {
 	name: "info",

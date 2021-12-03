@@ -1,23 +1,23 @@
-import { blackMarket, Vagan } from "../../util/exports.js";
+import { blackMarket, platyborg } from "../../util/index.js";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 export const execute = async (interaction: CommandInteraction) => {
 
-	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
+	const member = await platyborg.PFC.members.fetch(interaction.user.id);
 
 	// Gets current balance of the author
-	const currentAmount = (await blackMarket.users.get(`${interaction.user?.id}`)).cash;
+	const currentAmount = (await blackMarket.getUser(`${interaction.user?.id}`)).cash;
 
 	// Gets the amount from the arg
 	const transferAmount = interaction.options.getNumber("amount", true);
 
 	// Gets the target from the arg
-	const transferTarget = await Vagan.users.fetch(interaction.options.getUser("user", true).id);
+	const transferTarget = await platyborg.users.fetch(interaction.options.getUser("user", true).id);
 
 	const embed = new MessageEmbed()
-		.setAuthor(member.displayName, interaction.user?.displayAvatarURL())
+		.setAuthor(member.nickname ?? interaction.user.username, interaction.user?.displayAvatarURL())
 		.setColor(0xFF0000)
 		.setTitle("Invalid amount 🚨")
-		.setDescription(Vagan.config.replies.error[Math.floor(Math.random() * Vagan.config.replies.error.length)]);
+		.setDescription(platyborg.config.replies.error[Math.floor(Math.random() * platyborg.config.replies.error.length)]);
 
 	// Returns error if they don't have enough money
 	if (transferAmount > currentAmount) return interaction.reply({ embeds: [ embed.addField("Error", `You don't have enough cash. You currently have ${currentAmount}`) ] });
@@ -31,9 +31,11 @@ export const execute = async (interaction: CommandInteraction) => {
 	// Gives the money to the target
 	await blackMarket.add(transferTarget.id, transferAmount);
 
-	// Success message
-	interaction.reply({ embeds: [ embed
-		.setColor(0x00FF00)
+	// Set embed
+	embed.setColor(0x00FF00)
 		.setTitle("Transfer successful")
-		.setDescription(`Successfully transferred ${transferAmount} to ${transferTarget}. Your current balance is ${(await blackMarket.users.get(interaction.user?.id)).cash}`) ] });
+		.setDescription(`Successfully transferred ${transferAmount} to ${transferTarget}. Your current balance is ${(await blackMarket.getUser(interaction.user?.id)).cash}`);
+
+	// Success message
+	interaction.reply({ embeds: [ embed ] });
 }

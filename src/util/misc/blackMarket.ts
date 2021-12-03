@@ -1,106 +1,97 @@
 import Josh from "@joshdb/core"; // @ts-expect-error 7016
-import provider from "@joshdb/mongo";
-import { GuildEmoji, Snowflake } from "discord.js";
-import { BlackMarket, item, role, user, Vagan } from "../exports.js";
+import provider from "@joshdb/sqlite";
+import { Snowflake } from "discord.js";
+import path from "path";
+import { BlackMarket, item, user, platyborg, itemID } from "../index.js";
 
-// Allows me to call currency databases/functions later in the file.
+// Allows me to call currency databases/functions later in other files.
 export const blackMarket: BlackMarket = {
-	
+
 	users: new Josh<user>({
 		name: "users",
 		provider,
-		providerOptions: {
-			collection: "VagansVaultUsers",
-			url: process.env.MONGO_URL
-		}
+		providerOptions: { dataDir: path.join(process.cwd(), "data", "users") }
 	}),
 
 	items: new Josh<item>({
 		name: "items",
 		provider,
-		providerOptions: {
-			collection: "VagansVaultItems",
-			url: process.env.MONGO_URL
-		}
+		providerOptions: { dataDir: path.join(process.cwd(), "data", "items") }
 	}),
 
-	roles: new Josh<role>({
-		name: "roles",
-		provider,
-		providerOptions: {
-			collection: "VagansVaultRoles",
-			url: process.env.MONGO_URL
-		}
-	}),
-
-	async add(id: Snowflake, amount: number, where: "cash"|"bank" = "cash"): Promise<user> {
+	async getUser(id: Snowflake): Promise<user> {
 		const newUser: user = {
-			id: id,
+			id,
 			cash: 0,
 			bank: 0,
 			items: []
 		}
-		await blackMarket.users.ensure(`${id}`, newUser);
-		await blackMarket.users.math(`${id}.${where}`, "add", amount);
 
-		const User = await blackMarket.users.get(id);
-		return User;
+		return await this.users.ensure(`${id}`, newUser);
+	},
+
+	async add(id: Snowflake, amount: number, where: "cash"|"bank" = "cash"): Promise<user> {
+		await this.getUser(id);
+		await this.users.math(`${id}.${where}`, "add", amount);
+
+		return await this.getUser(id);
 	},
 
 	async subtract(id: Snowflake, amount: number, where: "cash"|"bank" = "cash"): Promise<user> {
-		const newUser: user = {
-			id: id,
-			cash: 0,
-			bank: 0,
-			items: []
-		}
-		await blackMarket.users.ensure(id, newUser);
-		await blackMarket.users.math(`${id}.${where}`, "subtract", amount);
+		await this.getUser(id);
+		await this.users.math(`${id}.${where}`, "subtract", amount);
 
-		const User = await blackMarket.users.get(id);
-		return User;
+		return await this.getUser(id);
 	},
 
-	async deposit(id: Snowflake, amount: number): Promise<user|string> {
-		const user = await blackMarket.users.get(id);
-		if (amount > user.cash) return "Not enough money in cash";
-		await blackMarket.users.math(`${id}.cash`, "subtract", amount);
-		await blackMarket.users.math(`${id}.bank`, "add", amount);
+	async deposit(id: Snowflake, amount: number): Promise<user> {
+		const user = await this.getUser(id);
+		if (amount > user.cash) throw new Error("Not enough money in cash");
+		await this.users.math(`${id}.cash`, "subtract", amount);
+		await this.users.math(`${id}.bank`, "add", amount);
 
-		const User = await blackMarket.users.get(id);
-		return User;
+		return await this.getUser(id);
 	},
 
-	async withdraw(id: Snowflake, amount: number): Promise<user|string> {
-		const user = await blackMarket.users.get(id);
-		if (amount > user.bank) return "Not enough money in bank";
-		await blackMarket.users.math(`${id}.bank`, "subtract", amount);
-		await blackMarket.users.math(`${id}.cash`, "add", amount);
+	async withdraw(id: Snowflake, amount: number): Promise<user> {
+		const user = await this.getUser(id);
+		if (amount > user.bank) throw new Error("Not enough money in bank");
+		await this.users.math(`${id}.bank`, "subtract", amount);
+		await this.users.math(`${id}.cash`, "add", amount);
 
-		const User = await blackMarket.users.get(id);
-		return User;
+		return await this.getUser(id);
 	},
 
-	async addItem(id: Snowflake, itemId: string): Promise<user> {
-		await blackMarket.users.push(`${id}.items`, itemId, true);
-		return blackMarket.users.get(`${id}`);
+	async addItem(id: Snowflake, itemId: itemID): Promise<user> {
+		await this.getUser(id);
+		await this.users.push(`${id}.items`, itemId, true);
+		return this.getUser(`${id}`);
 	},
 
 	async removeItem(id: Snowflake, itemId: string): Promise<user> {
-		const User = await blackMarket.users.get(id);
-		await blackMarket.users.set(`${id}.items`, User.items.splice(User.items.findIndex((Item) => Item === itemId), 1));
-		return blackMarket.users.get(`${id}`);
+		const user = await this.getUser(id);
+		await this.users.set(`${id}.items`, user.items.splice(user.items.findIndex((Item) => Item === itemId), 1));
+		return this.getUser(`${id}`);
+	},
+
+	async used(id: Snowflake, commandName: "bankrob"|"crime"|"heist"|"rob"|"slut"|"work"): Promise<void> {
+		await this.getUser(id);
+		await this.users.set(`${id}.last.${commandName}`, (Date.now()/60000))
+	},
+
+	async canRun(id: Snowflake, commandName: "bankrob"|"crime"|"heist"|"rob"|"slut"|"work"): Promise<boolean> {
+		await this.getUser(id);
+		const lastRun = (await this.users.get(`${id}`)).last?.[commandName] ?? 0;
+		const now = Date.now();
+		if ((now - lastRun) >= platyborg.config.economy[commandName].cooldown) return true;
+		else return false;
 	}
 };
 
-export const replaceReplies = (replies: string[], amount: number) => {
+export const replaceReplies = async (replies: string[], amount: number) => {
 	const Replies: string[] = [];
-	replies.forEach( (reply: string) => {
-		const emoji = (id: Snowflake): GuildEmoji => { return Vagan.emojis.cache.get(id) as GuildEmoji; }
-		const emojis: GuildEmoji[] = [];
-		[817125266593808435n, 817125375699845171n, 817125438110826547n, 817125529555697735n].forEach(emojiId => emojis.push(emoji(`${emojiId}`)));
-		Replies.push(reply.replace("{amount}", `${emojis[Math.floor(Math.random() * emojis.length)]}${amount}`));
-	});
+	const beancoin = await platyborg.emoji.randomBeancoin();
+	replies.forEach((reply: string) => Replies.push(reply.replace("{amount}", `${beancoin}${amount}`)));
 	return Replies;
 }
 export const randomNumber = (min: number, max: number) => {

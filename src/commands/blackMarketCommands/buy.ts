@@ -1,13 +1,14 @@
-import { blackMarket, Vagan } from "../../util/exports.js";
+import { blackMarket, platyborg } from "../../util/index.js";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 export const execute = async (interaction: CommandInteraction) => {
 
 	// Set variables
-	const member = new GuildMember(Vagan, interaction.member!, Vagan.KBC);
+	const member = await platyborg.PFC.members.fetch(interaction.user.id);
 	const item = await blackMarket.items.find("name", interaction.user.id);
-	const user = await blackMarket.users.get(interaction.user?.id);
+	const user = await blackMarket.getUser(interaction.user?.id);
+	const beancoin = platyborg.emoji.randomBeancoin();
 	const embed = new MessageEmbed()
-		.setAuthor(member.displayName, interaction.user?.displayAvatarURL());
+		.setAuthor(member.nickname ?? interaction.user.username, interaction.user?.displayAvatarURL());
 
 	// Let the user know if something went wrong, otherwise complete the action and make the embed.
 	if (!item) {
@@ -17,7 +18,7 @@ export const execute = async (interaction: CommandInteraction) => {
 	} else if (item.cost > user.cash) {
 		embed
 			.setColor(0xFF0000)
-			.setDescription(`You don't have enough cash to buy ${item.name}`);
+			.setDescription(`You need ${beancoin}${item.cost - user.cash} more to buy ${item.name}`);
 	} else if (item.requiredItems?.every(Item => user.items.includes(Item))) {
 		const requiredItems: string[] = [];
 		for (const Item of item.requiredItems) requiredItems.push((await blackMarket.items.get(Item)).name);
@@ -33,11 +34,6 @@ export const execute = async (interaction: CommandInteraction) => {
 		embed
 			.setColor(0x00FF00)
 			.setDescription(item.gainMessage ?? `You now have ${item.name}. Thanks for the business.`);
-	} else if (item.roleGain) {
-		embed
-			.setColor(0x00FF00)
-			.setDescription(item.gainMessage ?? `You now have ${item.name}. Thanks for the business.`);
-		if (item.roleGain) member.roles.add(item.roleGain);
 	} else {
 		embed
 			.setColor(0x00FF00)

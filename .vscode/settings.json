@@ -1,17 +1,23 @@
 {
-	"files.autoSave": "onFocusChange",
-	"workbench.editor.wrapTabs": true,
-	"workbench.editor.decorations.badges": true,
-	"workbench.editor.decorations.colors": true,
-	"search.mode": "reuseEditor",
-	"files.exclude": {
-		"**/node_modules": true
-	},
-	"editor.renderWhitespace": "boundary",
-	"workbench.editor.pinnedTabSizing": "compact",
-	"workbench.startupEditor": "welcomePageInEmptyWorkbench",
-	"discord.lowerDetailsEditing": "Working on Vagan",
-	"discord.largeImageIdling": "Laziness",
-	"discord.lowerDetailsNoWorkspaceFound": "Working on something",
-	"git.allowForcePush": true,
+  "files.autoSave": "onFocusChange",
+  "workbench.editor.wrapTabs": true,
+  "workbench.editor.decorations.badges": true,
+  "workbench.editor.decorations.colors": true,
+  "search.mode": "reuseEditor",
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "editor.renderWhitespace": "boundary",
+  "workbench.editor.pinnedTabSizing": "compact",
+  "workbench.startupEditor": "welcomePageInEmptyWorkbench",
+  "discord.lowerDetailsEditing": "Working on Platyborg",
+  "discord.largeImageIdling": "Laziness",
+  "discord.lowerDetailsNoWorkspaceFound": "Working on something",
+  "git.allowForcePush": true,
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

@@ -1,23 +1,24 @@
-import { blackMarket, Vagan } from "../util/exports.js";
+import { blackMarket, platyborg } from "../util/index.js";
 import { CommandInteraction, MessageEmbed, version } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types";
 export const execute = async (interaction: CommandInteraction) => {
 	const then = new Date();
-	interaction.reply({ content: "Pinging...", ephemeral: true });
+	await interaction.reply({ content: "Pinging...", ephemeral: true });
 	const now = new Date();
 	const ping = now.getTime() - then.getTime();
+	interaction.deleteReply()
 	const embed = new MessageEmbed()
 		.setColor(0x03b1fc)
 		.setTitle('Bot Info')
-		.setDescription(Vagan.config.replies.ping[Math.floor(Math.random() * Vagan.config.replies.ping.length)])
-		.addField("Round-trip latency", `${ping}ms`, true)
-		.addField("WebSocket heartbeat", `${Vagan.ws.ping}ms`, true)
-		.addField("Discord.js version", version, true)
-		.addField("Node.js version", process.version, true)
-		.addField("Hosting", "Linode 2GB")
-		.addField("Rows of data in Black Market databases", `${await blackMarket.users.size + await blackMarket.items.size + await blackMarket.roles.size}`)
+		.setDescription(platyborg.config.replies.ping[Math.floor(Math.random() * platyborg.config.replies.ping.length)])
+		.addField("Round-trip latency", `${ping}ms`)
+		.addField("WebSocket heartbeat", `${platyborg.ws.ping}ms`)
+		.addField("Discord.js version", version)
+		.addField("Node.js version", process.version)
+		// .addField("Hosting", "honestly at this point i have no idea where im gonna host")
+		.addField("Rows of data in Black Market databases", `${await blackMarket.users.size + await blackMarket.items.size}`)
 		.addField("Profile Picture", "Created by amazing artist <@!615720739328491526>");
-	interaction.followUp({ embeds: [embed], ephemeral: interaction.options.getBoolean("public")! });
+	interaction.followUp({ embeds: [embed], ephemeral: !interaction.options.getBoolean("public")! });
 }
 export const help = {
 	name: "botinfo",
